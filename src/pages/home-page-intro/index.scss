@@ -1,0 +1,78 @@
+.home-page {
+  min-height: 100vh;
+  background-color: #fffbe6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+
+  .home-content {
+
+    width: 100%;
+    background-color: #fff8dc;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .left {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+
+      .bee-image {
+        width: 200px;
+        height: auto;
+
+        @media (max-width: 768px) {
+          width: 150px;
+        }
+      }
+    }
+
+    .right {
+      flex: 2;
+      padding: 40px;
+
+      @media (max-width: 768px) {
+        padding: 20px;
+      }
+
+      .title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 32px;
+        line-height: 1.6;
+      }
+
+      .start-btn {
+        background-color: #f9a825;
+        border: none;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 0 24px;
+        height: 48px;
+
+        &:hover {
+          background-color: #f57f17;
+        }
+      }
+    }
+  }
+}

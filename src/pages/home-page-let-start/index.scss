@@ -1,0 +1,63 @@
+.home-start-page {
+  min-height: 100vh;
+  background-color: #fffbe6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+
+  .home-start-container {
+    max-width: 400px;
+    width: 100%;
+    background-color: #fff2cc;
+    padding: 40px 24px;
+    text-align: center;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    .bee-image {
+      width: 120px;
+      margin-bottom: 24px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 32px;
+    }
+
+    .sign-up-btn {
+      background-color: #f9a825;
+      border: none;
+      width: 100%;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      height: 48px;
+
+      &:hover {
+        background-color: #f57f17;
+      }
+    }
+
+    .log-in-btn {
+      width: 100%;
+      border: 2px solid #f9a825;
+      color: #f9a825;
+      font-weight: bold;
+      border-radius: 8px;
+      height: 48px;
+
+      &:hover {
+        background-color: #fff3e0;
+      }
+    }
+  }
+}

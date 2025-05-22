@@ -1,0 +1,56 @@
+.footer {
+
+  cursor: pointer;
+  width: 100%;
+  background-color: #fff3e0; /* Cam nhạt làm nền */
+  border-top: 1px solid #ddd;
+  padding: 10px 0;
+ /* Đảm bảo footer nổi trên các phần tử khác */
+}
+
+.nav-icons {
+  max-width: 800px; /* Đồng bộ với chiều rộng nội dung chính */
+  margin: 0 auto;
+  padding: 10px 0;
+
+  .footer-icon {
+    font-size: 24px;
+    color: #666;
+    transition: color 0.3s ease;
+
+    &.active {
+      color: #ff9800; /* Cam đậm cho biểu tượng active */
+    }
+
+    &:hover {
+      color: #ff9800; /* Cam đậm khi hover */
+    }
+  }
+}
+
+.copyright {
+  text-align: center;
+  padding: 5px 0;
+  background-color: #ffe0b2; /* Cam nhạt hơn một chút */
+  font-size: 14px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 5px 0;
+  }
+
+  .nav-icons {
+    max-width: 100%;
+    padding: 5px 0;
+
+    .footer-icon {
+      font-size: 20px;
+    }
+  }
+
+  .copyright {
+    font-size: 12px;
+  }
+}
