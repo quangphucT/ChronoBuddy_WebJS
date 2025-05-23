@@ -16,6 +16,7 @@ import AddProjectTask from "./pages/add-project-task-page";
 import { ToastContainer } from "react-toastify";
 import PublicRoute from "./pages/protect-route";
 import PrivateRoute from "./pages/private-route";
+import UserManagement from "./pages/dashboard-management/admin/user-management";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -77,6 +78,10 @@ const App = () => {
         {
           path: "statistic",
           element: <StatisticsManagement />,
+        },
+         {
+          path: "user-management",
+          element: <UserManagement />,
         },
       ],
     },
