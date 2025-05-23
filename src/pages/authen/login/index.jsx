@@ -21,7 +21,7 @@ const LoginPage = () => {
 
     setLoading(true)
     try {
-      const response = await api.post('login', values)
+      const response = await api.post('api/login', values)
       const dataUser = response.data.data;
       const { token, role } = dataUser
       localStorage.setItem("token", token)

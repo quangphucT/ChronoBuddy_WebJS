@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
+import {
+  DesktopOutlined,
+  PieChartOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 const { Header, Content, Sider } = Layout;
@@ -13,7 +17,8 @@ function getItem(label, key, icon, children) {
 }
 const items = [
   getItem("Statistics", "statistic", <PieChartOutlined />),
-  getItem("User Management", "user-management", <DesktopOutlined />),
+  getItem("User Management", "user-management", <UserOutlined />),
+  getItem("User Delete Management", "user-delete-management", <UserOutlined />),
 ];
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -22,7 +27,8 @@ const App = () => {
   } = theme.useToken();
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider width={'250px'}
+      <Sider
+        width={"250px"}
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
@@ -36,9 +42,8 @@ const App = () => {
         />
       </Sider>
       <Layout>
-        <Header  style={{ padding: 0, background: colorBgContainer }} />
+        <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: "0 16px" }}>
-          
           <div
             style={{
               padding: 24,
