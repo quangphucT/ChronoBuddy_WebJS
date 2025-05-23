@@ -17,6 +17,7 @@ import { ToastContainer } from "react-toastify";
 import PublicRoute from "./pages/protect-route";
 import PrivateRoute from "./pages/private-route";
 import UserManagement from "./pages/dashboard-management/admin/user-management";
+import UserDeleteManagement from "./pages/dashboard-management/admin/user-delete-management";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -82,6 +83,10 @@ const App = () => {
          {
           path: "user-management",
           element: <UserManagement />,
+        },
+          {
+          path: "user-delete-management",
+          element: <UserDeleteManagement />,
         },
       ],
     },

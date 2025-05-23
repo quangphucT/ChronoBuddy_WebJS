@@ -17,11 +17,11 @@ const RegisterPage = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      await api.post("register", values);
+      await api.post("api/register", values);
       toast.success("Register successfully!");
       navigate("/login-page");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response.data.message.error);
     }
     setLoading(false);
   };
