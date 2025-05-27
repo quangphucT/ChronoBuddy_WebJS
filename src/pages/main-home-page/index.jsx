@@ -331,16 +331,16 @@ const HomePage = () => {
           formAddTaskToWorkSpace.resetFields();
         }}
         footer={[
-          <div>
+          
             <Button
-              loading={loading}
+            
               onClick={() => {
                 setOpenAddTaskModal(false);
                 formAddTaskToWorkSpace.resetFields();
               }}
             >
               Cancel
-            </Button>
+            </Button>,
             <Button
               loading={loading}
               onClick={() => {
@@ -349,7 +349,7 @@ const HomePage = () => {
             >
               Save
             </Button>
-          </div>,
+          
         ]}
       >
         <Form
