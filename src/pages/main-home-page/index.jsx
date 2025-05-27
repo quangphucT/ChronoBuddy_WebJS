@@ -10,6 +10,7 @@ import {
   Form,
   Input,
   Popconfirm,
+  DatePicker,
 } from "antd";
 import { PlusOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
@@ -21,6 +22,8 @@ import { useForm } from "antd/es/form/Form";
 import { addWorkSpace } from "../../apis/addWorkspaceApi";
 import { deleteWorkSpace } from "../../apis/deleteWorkSpaceApi";
 import { editWorkSpace } from "../../apis/editWorkspaceApi";
+import { addTaskToWS } from "../../apis/addTaskToWSApi";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const today = new Date().toLocaleDateString("en-US", { weekday: "long" }); // Hiển thị ngày hiện tại
@@ -31,7 +34,11 @@ const HomePage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [formUpdate] = useForm();
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [workSpaceId, setWorkSpaceId] = useState("");
+  const [openAddTaskModal, setOpenAddTaskModal] = useState(false);
+  const navigate = useNavigate();
   const [form] = useForm();
+  const [formAddTaskToWorkSpace] = useForm();
   const handleCloseModal = () => {
     setOpenModal(false);
     form.resetFields();
@@ -51,6 +58,10 @@ const HomePage = () => {
   useEffect(() => {
     fetchWorkspaceUser();
   }, []);
+  const handleAddTaskToWorkSpace = async (workSpaceId) => {
+    setWorkSpaceId(workSpaceId);
+    setOpenAddTaskModal(true);
+  };
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
@@ -91,6 +102,27 @@ const HomePage = () => {
     }
     setLoading(false);
   };
+  const handleSubmitFormAddTaskToWorkSpace = async (values) => {
+    setLoading(true)
+    try {
+       const requestBody = {
+      title: values.title,
+      status: values.status,
+      dueDate: values.dueDate.toISOString(), // Convert to ISO string
+    };
+      await addTaskToWS(requestBody, workSpaceId)
+     toast.success("Add Task To Your WorkSpace success!")
+     formAddTaskToWorkSpace.resetFields();
+     setOpenAddTaskModal(false);
+     setWorkSpaceId("");
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+    setLoading(false)
+  };
+   const handleNavigateToTaskDetails = (workspaceId) =>{
+    navigate(`tasks-details/${workspaceId}`)
+   }
   return (
     <div className="homepage">
       <div className="header-home-main">
@@ -167,7 +199,17 @@ const HomePage = () => {
         ) : (
           workSpaces.map((workspace) => (
             <Col xs={24} sm={12} md={8} key={workspace.id}>
-              <Card style={{ background: "#f0f3f6" }} title={workspace.name}>
+              <Card
+                
+                style={{ background: "#f0f3f6", cursor: "pointer" }}
+                title={workspace.name}
+              >
+               
+                 <Button style={{margin: '10px 0'}} onClick={() => {
+                  handleAddTaskToWorkSpace(workspace.id);
+                }}>Add Tasks To Your WorkSpace</Button>
+                <Button  onClick={() => {handleNavigateToTaskDetails(workspace.id)}}>View Tasks</Button>
+              
                 <p>
                   <strong>Created At:</strong>{" "}
                   {dayjs(workspace.createdAt).format("DD/MM/YYYY")}
@@ -201,6 +243,7 @@ const HomePage = () => {
                     >
                       Delete
                     </Button>
+                    
                   </Popconfirm>
                 </div>
               </Card>
@@ -277,6 +320,74 @@ const HomePage = () => {
             ]}
           >
             <Input placeholder="Enter workspace name" />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="Add new task to your workspace!"
+        open={openAddTaskModal}
+        onCancel={() => {
+          setOpenAddTaskModal(false);
+          formAddTaskToWorkSpace.resetFields();
+        }}
+        footer={[
+          <div>
+            <Button
+              loading={loading}
+              onClick={() => {
+                setOpenAddTaskModal(false);
+                formAddTaskToWorkSpace.resetFields();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              loading={loading}
+              onClick={() => {
+                formAddTaskToWorkSpace.submit();
+              }}
+            >
+              Save
+            </Button>
+          </div>,
+        ]}
+      >
+        <Form
+          labelCol={{ span: 24 }}
+          form={formAddTaskToWorkSpace}
+          onFinish={handleSubmitFormAddTaskToWorkSpace}
+        >
+          <Form.Item
+            label="Title"
+            name={"title"}
+            rules={[
+              {
+                required: true,
+                message: "Title is required!",
+              },
+            ]}
+          >
+            <Input placeholder="Enter title" />
+          </Form.Item>
+
+          <Form.Item
+            label="Status"
+            name={"status"}
+            rules={[
+              {
+                required: true,
+                message: "Status is required!",
+              },
+            ]}
+          >
+            <Input placeholder="Enter status" />
+          </Form.Item>
+          <Form.Item
+            label="Due Date"
+            name="dueDate"
+            rules={[{ required: true, message: "Please pick due date" }]}
+          >
+            <DatePicker showTime style={{ width: "100%" }} />
           </Form.Item>
         </Form>
       </Modal>

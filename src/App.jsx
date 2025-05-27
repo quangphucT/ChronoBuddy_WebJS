@@ -18,6 +18,7 @@ import PublicRoute from "./pages/protect-route";
 import PrivateRoute from "./pages/private-route";
 import UserManagement from "./pages/dashboard-management/admin/user-management";
 import UserDeleteManagement from "./pages/dashboard-management/admin/user-delete-management";
+import TaskDetailsWorkSpace from "./pages/task-details_WorkSpace";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const App = () => {
         {
           path: "add-projects-tasks",
           element: <AddProjectTask />,
+        },
+          {
+          path: "tasks-details/:id",
+          element: <TaskDetailsWorkSpace />,
         },
       ],
     },
