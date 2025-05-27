@@ -12,3 +12,5 @@ export * as editWorkSpace from "./editWorkspaceApi";
 export * as updateProfile from "./updateProfileApi";
 export * as addTaskToWS from "./addTaskToWSApi";
 export * as getTaskDetailsInWorkSpace from "./getTaskDetailsInWSApi";
+export * as deleteTask from "./deleteTaskApi";
+export * as updateTask from './updateTaskApi'
