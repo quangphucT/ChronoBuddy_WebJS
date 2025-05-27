@@ -1,6 +1,6 @@
 import "./index.scss";
-import { Input, Avatar, Button, Image } from "antd";
-import { UserOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Input, Avatar, Image } from "antd";
+import { UserOutlined, SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import logoBee from "../../assets/images/1740063267602.gif";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 const Header = () => {
   const userName = useSelector((store) => store?.user?.username);
   const navigate = useNavigate();
+
   return (
     <div className="header">
       <div className="wrapper-header-main-homeScreen">
@@ -33,15 +34,6 @@ const Header = () => {
         size="large"
       />
       <div className="user-actions">
-        <Button
-          onClick={() => navigate("add-projects-tasks")}
-          type="primary"
-          icon={<PlusOutlined />}
-          className="add-task-btn"
-          size="large"
-        >
-          Add Task
-        </Button>
         <p className="username-user">{userName}</p>
         <Avatar
           onClick={() => navigate("profile-page")}
