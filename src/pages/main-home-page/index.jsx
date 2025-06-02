@@ -220,76 +220,71 @@ const HomePage = () => {
           </Card>
         </div>
 
-        <h3>Your Workspaces</h3>
-        <Row gutter={[16, 16]}>
-          {workSpaces.length === 0 ? (
-            <Col span={24}>
-              <Card>No workspace found.</Card>
-            </Col>
-          ) : (
-            workSpaces.map((workspace) => (
-              <Col xs={24} sm={12} md={8} key={workspace.id}>
-                <Card
-                  style={{ background: "#f0f3f6", cursor: "pointer" }}
-                  title={workspace.name}
-                >
-      
-                  <Button
-                    style={{ margin: "10px 0" }}
-                    onClick={() => {
-                      handleAddTaskToWorkSpace(workspace.id);
-                    }}
-                  >
-                    Add Tasks To Your WorkSpace
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleNavigateToTaskDetails(workspace.id);
-                    }}
-                  >
-                    View Tasks
-                  </Button>
+       <h3 className="text-2xl font-semibold mb-6 text-gray-800">Your Workspaces</h3>
+<Row gutter={[16, 16]}>
+  {workSpaces.length === 0 ? (
+    <Col span={24}>
+      <div className="p-6 bg-gray-100 rounded shadow text-center text-gray-500 font-medium">
+        No workspace found.
+      </div>
+    </Col>
+  ) : (
+    workSpaces.map((workspace) => (
+      <Col xs={24} sm={12} md={8} key={workspace.id}>
+        <div className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-xl transition-shadow duration-300">
+          <h4 className="text-xl font-bold mb-3 text-indigo-700">{workspace.name}</h4>
 
-                  <p>
-                    <strong>Created At:</strong>{" "}
-                    {dayjs(workspace.createdAt).format("DD/MM/YYYY")}
-                  </p>
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <Button
-                      onClick={() => {
-                        setOpenModalUpdate(true);
-                        formUpdate.setFieldsValue(workspace);
-                      }}
-                      type="primary"
-                      style={{ padding: "20px", fontWeight: "bold" }}
-                    >
-                      Edit
-                    </Button>
-                    <Popconfirm
-                      title="Are you sure to delete this workspace?"
-                      onConfirm={() => {
-                        handleDeleteWorkSpace(workspace.id);
-                      }}
-                    >
-                      <Button
-                        loading={loading}
-                        type="primary"
-                        danger
-                        style={{
-                          padding: "20px",
-                          fontWeight: "bold",
-                          borderRadius: "20px",
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </Popconfirm>
-                  </div>
-                </Card>
-              </Col>
-            ))
-          )}
-        </Row>
+          <div className="flex flex-col space-y-3 mb-4">
+            <button
+              onClick={() => handleAddTaskToWorkSpace(workspace.id)}
+              className="bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white font-semibold py-2 rounded-md transition-colors duration-200"
+            >
+              Add Tasks To Your WorkSpace
+            </button>
+            <button
+              onClick={() => handleNavigateToTaskDetails(workspace.id)}
+              className="bg-gray-200 cursor-pointer hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-md transition-colors duration-200"
+            >
+              View Tasks
+            </button>
+          </div>
+
+          <p className="text-gray-500 mb-4">
+            <strong className="text-gray-700">Created At:</strong>{" "}
+            {dayjs(workspace.createdAt).format("DD/MM/YYYY")}
+          </p>
+
+          <div className="flex gap-4">
+            <button
+              className="bg-green-600 cursor-pointer hover:bg-green-700 text-white font-extrabold px-8 py-2 rounded-md transition-colors duration-200"
+              onClick={() => {
+                setOpenModalUpdate(true);
+                formUpdate.setFieldsValue(workspace);
+              }}
+            >
+              Edit
+            </button>
+
+            <Popconfirm
+              title="Are you sure to delete this workspace?"
+              onConfirm={() => handleDeleteWorkSpace(workspace.id)}
+            >
+              <button
+                disabled={loading}
+                className={`bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold px-8 py-2 rounded-md transition-colors duration-200 ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                Delete
+              </button>
+            </Popconfirm>
+          </div>
+        </div>
+      </Col>
+    ))
+  )}
+</Row>
+
         {/* Add workSpace */}
         <Modal
           footer={[
