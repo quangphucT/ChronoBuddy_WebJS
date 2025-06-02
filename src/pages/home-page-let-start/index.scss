@@ -1,19 +1,33 @@
 .home-start-page {
+  position: relative;
   min-height: 100vh;
-  background-color: #fffbe6;
+  background-image: url('../../assets/images/teamwordmain.jpeg');
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.6); // lớp phủ trắng mờ (có thể tăng giảm)
+    z-index: 0;
+  }
 
   .home-start-container {
+    position: relative;
+    z-index: 1;
     max-width: 400px;
     width: 100%;
-    background-color: #fff2cc;
     padding: 40px 24px;
     text-align: center;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8); // thêm nền nhẹ để dễ đọc hơn
 
     .bee-image {
       width: 120px;
@@ -21,42 +35,50 @@
     }
 
     .title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: #333;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #2c3e50;
+      letter-spacing: 0.5px;
     }
 
     .subtitle {
-      font-size: 14px;
+      font-size: 16px;
       color: #555;
       margin-bottom: 32px;
+      line-height: 1.5;
     }
 
     .sign-up-btn {
-      background-color: #f9a825;
+      background: linear-gradient(135deg, #5a2a82, #2a5298); // tím đậm -> xanh dương đậm
+      color: white;
       border: none;
       width: 100%;
       font-weight: bold;
+      font-size: 16px;
       border-radius: 8px;
       margin-bottom: 16px;
-      height: 48px;
+      height: 50px;
+      cursor: pointer;
 
       &:hover {
-        background-color: #f57f17;
+        opacity: 0.9;
       }
     }
 
     .log-in-btn {
+      background: linear-gradient(135deg, #2a5298, #5a2a82); // xanh -> tím (ngược lại)
+      color: white;
+      border: none;
       width: 100%;
-      border: 2px solid #f9a825;
-      color: #f9a825;
       font-weight: bold;
+      font-size: 16px;
       border-radius: 8px;
-      height: 48px;
+      height: 50px;
+      cursor: pointer;
 
       &:hover {
-        background-color: #fff3e0;
+        opacity: 0.9;
       }
     }
   }
