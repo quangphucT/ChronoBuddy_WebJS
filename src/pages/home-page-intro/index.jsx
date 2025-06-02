@@ -1,7 +1,7 @@
 import './index.scss';
 import { Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import logoBee from '../../assets/images/1740063267602.gif'
+import logoTODOLIST from '../../assets/images/8019152.png'
 import { useNavigate } from 'react-router-dom';
 const HomePageIntro = () => {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ const HomePageIntro = () => {
     <div className="home-page">
       <div className="home-content">
         <div className="left">
-          <img src={logoBee} alt="Bee" className="bee-image" />
+          <img src={logoTODOLIST} alt="Bee" className="bee-image" />
         </div>
 
         <div className="right">

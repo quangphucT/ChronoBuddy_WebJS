@@ -1,15 +1,34 @@
 .home-page {
+  position: relative;
   min-height: 100vh;
-  background-color: #fffbe6;
+  background: url("../../assets/images/teamwordmain.jpeg") no-repeat center
+    center;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px;
 
-  .home-content {
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.5
+    ); /* lớp phủ màu trắng mờ, bạn thay đổi màu/độ mờ */
+    backdrop-filter: blur(0.5px); /* tạo hiệu ứng mờ sương */
+    -webkit-backdrop-filter: blur(0.5px); /* hỗ trợ cho Safari */
+    z-index: 0;
+  }
 
+  .home-content {
+    position: relative;
+    z-index: 1;
     width: 100%;
-    background-color: #fff8dc;
+
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -48,21 +67,36 @@
       }
 
       .title {
-        font-size: 32px;
+        font-size: 42px;
         font-weight: 700;
         margin-bottom: 20px;
-        color: #333;
+        color: transparent;
+        background: linear-gradient(
+          90deg,
+          #f11313b1,
+          /* đỏ */ #ff8c00,
+          /* cam đậm */ #008000,
+          /* xanh lá */ #2467be,
+          /* xanh dương */ #4b0082,
+          /* chàm */ #8b00ff /* tím */
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
       }
 
       .subtitle {
         font-size: 16px;
-        color: #666;
+        color: #555050;
         margin-bottom: 32px;
         line-height: 1.6;
       }
 
       .start-btn {
-        background-color: #f9a825;
+        background: linear-gradient(
+          320deg,
+          #4574b2,
+          /* xanh dương */ #9a67c3 /* tím */
+        );
         border: none;
         font-weight: bold;
         border-radius: 8px;

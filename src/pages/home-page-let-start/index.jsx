@@ -1,14 +1,13 @@
 import './index.scss';
-import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import logoBee from '../../assets/images/1740063267602.gif'
+import logoTODOLIST from '../../assets/images/8019152.png'
 const HomePageLetStart = () => {
   const navigate = useNavigate();
 
   return (
     <div className="home-start-page">
       <div className="home-start-container">
-        <img src={logoBee} alt="Bee" className="bee-image" />
+        <img src={logoTODOLIST} alt="Bee" className="bee-image" />
 
         <h2 className="title">Let’s get you sorted</h2>
         <p className="subtitle">
@@ -16,22 +15,22 @@ const HomePageLetStart = () => {
           project-wise conveniently!
         </p>
 
-        <Button
+        <button
           type="primary"
           className="sign-up-btn"
           size="large"
           onClick={() => navigate('/register-page')}
         >
           Sign up
-        </Button>
+        </button>
 
-        <Button
+        <button
           className="log-in-btn"
           size="large"
           onClick={() => navigate('/login-page')}
         >
           Log in
-        </Button>
+        </button>
       </div>
     </div>
   );
