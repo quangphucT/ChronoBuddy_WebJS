@@ -1,13 +1,26 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getTaskDetailsInWorkSpace } from "../../apis/getTaskDetailsInWSApi";
+import './index.scss'
 import { useParams } from "react-router-dom";
-import { Table, Tag, Typography, Space, Button, Popconfirm, Input, Form, Modal, DatePicker } from "antd";
+import {
+  Table,
+  Tag,
+  Typography,
+  Space,
+  Button,
+  Popconfirm,
+  Input,
+  Form,
+  Modal,
+  DatePicker,
+} from "antd";
 import dayjs from "dayjs";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { deleteTask } from "../../apis/deleteTaskApi";
 import { useForm } from "antd/es/form/Form";
 import { updateTask } from "../../apis/updateTaskApi";
+
 
 const { Title } = Typography;
 
@@ -17,6 +30,7 @@ const TaskDetailsWorkSpace = () => {
   const [taskDetails, setTaskDetails] = useState([]);
   const [openModalEditTask, setOpenModalEditTask] = useState(false);
   const [form] = useForm();
+
   const fetchingDataTask = async () => {
     setLoading(true);
     try {
@@ -32,15 +46,16 @@ const TaskDetailsWorkSpace = () => {
     fetchingDataTask();
   }, [id]);
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     try {
       await deleteTask(id);
       toast.success("Deleted task success!");
       fetchingDataTask();
     } catch (error) {
-      toast.error(error.response.data)
+      toast.error(error.response.data);
     }
-  }
+  };
+
   const columns = [
     {
       title: "ID",
@@ -70,7 +85,7 @@ const TaskDetailsWorkSpace = () => {
       render: (dueDate) => dayjs(dueDate).format("DD/MM/YYYY HH:mm A"),
     },
     {
-      title: "Creeated Date",
+      title: "Created Date",
       dataIndex: "createdAt",
       key: "createdAt",
       render: (createdAt) => dayjs(createdAt).format("DD/MM/YYYY HH:mm A"),
@@ -82,12 +97,16 @@ const TaskDetailsWorkSpace = () => {
         <Space>
           <Button
             icon={<EditOutlined />}
-            type="primary"
+            style={rainbowButtonStyle}
             size="small"
-            onClick={() => {setOpenModalEditTask(true);const recordWithDayjs = {
-    ...record,
-    dueDate: dayjs(record.dueDate),
-  }; form.setFieldsValue(recordWithDayjs)}}
+            onClick={() => {
+              setOpenModalEditTask(true);
+              const recordWithDayjs = {
+                ...record,
+                dueDate: dayjs(record.dueDate),
+              };
+              form.setFieldsValue(recordWithDayjs);
+            }}
           >
             Edit
           </Button>
@@ -97,12 +116,7 @@ const TaskDetailsWorkSpace = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button
-              icon={<DeleteOutlined />}
-              type="primary"
-              danger
-              size="small"
-            >
+            <Button icon={<DeleteOutlined />} danger size="small">
               Delete
             </Button>
           </Popconfirm>
@@ -110,23 +124,31 @@ const TaskDetailsWorkSpace = () => {
       ),
     },
   ];
-  const handleSubmit = async(values) => {
-    setLoading(true)
+
+  const handleSubmit = async (values) => {
+    setLoading(true);
     try {
-       const {id, ...valuesFiltered} = values;
-       await updateTask(valuesFiltered, id);
-       toast.success("Edit task sucess!");
-       form.resetFields();
-       setOpenModalEditTask(false);
-       fetchingDataTask();
+      const { id, ...valuesFiltered } = values;
+      await updateTask(valuesFiltered, id);
+      toast.success("Edit task success!");
+      form.resetFields();
+      setOpenModalEditTask(false);
+      fetchingDataTask();
     } catch (error) {
-      toast.error(error.response.data)
+      toast.error(error.response.data);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
+
   return (
-    <div style={{ padding: 24 }}>
-      <Title level={3}>List Tasks In Workspace</Title>
+    <div
+
+      className="mt-[51px]"
+      style={{ padding: 24, background: "#fff", borderRadius: 12 }}
+    >
+      <Title level={3} style={{ textAlign: "center", marginBottom: 24 }}>
+        🗂️ List Tasks In Workspace
+      </Title>
       <Table
         loading={loading}
         columns={columns}
@@ -135,29 +157,53 @@ const TaskDetailsWorkSpace = () => {
         bordered
         pagination={{ pageSize: 5 }}
       />
-      <Modal open={openModalEditTask} onCancel={() => {setOpenModalEditTask(false); form.resetFields()}} form={form} title="Update Your Task Here!" footer={[
-        <Button onClick={() => {setOpenModalEditTask(false); form.resetFields()}}>Cancel</Button>,
-        <Button loading={loading} onClick={() => {form.submit()}}>Save</Button>
-      ]}>
-        <Form labelCol={{span: 24}} form={form} onFinish={handleSubmit}>
-          <Form.Item name={"id"} hidden>
-            <Input/>
+
+      <Modal
+        open={openModalEditTask}
+        onCancel={() => {
+          setOpenModalEditTask(false);
+          form.resetFields();
+        }}
+        title="Update Your Task Here!"
+        footer={[
+          <Button
+            key="cancel"
+            onClick={() => {
+              setOpenModalEditTask(false);
+              form.resetFields();
+            }}
+          >
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            loading={loading}
+            style={rainbowButtonStyle}
+            onClick={() => {
+              form.submit();
+            }}
+          >
+            Save
+          </Button>,
+        ]}
+      >
+        <Form labelCol={{ span: 24 }} form={form} onFinish={handleSubmit}>
+          <Form.Item name="id" hidden>
+            <Input />
           </Form.Item>
-          <Form.Item label="Title" name={"title"} rules={[
-            {
-              required: true,
-              message: "Title is required!"
-            }
-          ]}>
-            <Input placeholder="Enter ttile"/>
+          <Form.Item
+            label="Title"
+            name="title"
+            rules={[{ required: true, message: "Title is required!" }]}
+          >
+            <Input placeholder="Enter title" />
           </Form.Item>
-          <Form.Item label="Status" name={"status"} rules={[
-            {
-              required: true,
-              message: "Status is required!"
-            }
-          ]}>
-            <Input placeholder="Enter status"/>
+          <Form.Item
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "Status is required!" }]}
+          >
+            <Input placeholder="Enter status" />
           </Form.Item>
           <Form.Item
             label="Due Date"
@@ -170,6 +216,16 @@ const TaskDetailsWorkSpace = () => {
       </Modal>
     </div>
   );
+};
+
+const rainbowButtonStyle = {
+  background:
+    "linear-gradient(90deg, #ff0080, #ff8c00, #40e0d0, #8a2be2)",
+  color: "#fff",
+  border: "none",
+  fontWeight: 600,
+  backgroundSize: "300% 300%",
+  animation: "rainbow 6s ease infinite",
 };
 
 export default TaskDetailsWorkSpace;

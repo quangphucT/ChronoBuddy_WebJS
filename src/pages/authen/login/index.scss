@@ -1,16 +1,37 @@
+
 .login-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f5f7fa;
+  position: relative;
+  overflow: hidden;
+
+  // Background hình mờ như sương mù
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../../assets/images/teamwordmain.jpeg'); // Cập nhật đường dẫn hình nền phù hợp
+    background-size: cover;
+    background-position: center;
+    filter: blur(0.5px);
+    opacity: 0.5;
+    z-index: 0;
+  }
 
   .login-container {
+    position: relative;
+    z-index: 1;
     max-width: 400px;
+    width: 100%;
     padding: 2rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95); // nền trắng bán trong suốt
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 
     .bee-image {
       text-align: center;
@@ -24,17 +45,26 @@
     .title {
       text-align: center;
       margin-bottom: 1.5rem;
+      color: #333;
     }
 
     .login-form {
       .input {
         height: 40px;
+        border-radius: 8px;
       }
 
       .submit-btn {
         margin-top: 1rem;
         height: 40px;
         font-weight: 600;
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        border: none;
+        color: #333;
+
+        &:hover {
+          opacity: 0.9;
+        }
       }
 
       .form-extra {
@@ -43,7 +73,7 @@
 
         .forgot {
           cursor: pointer;
-          color: #1890ff;
+          color: #1e88e5;
 
           &:hover {
             text-decoration: underline;
@@ -55,6 +85,7 @@
         margin-top: 1rem;
         text-align: center;
         cursor: pointer;
+        display: block;
 
         span {
           color: #1e88e5;
@@ -63,29 +94,6 @@
 
         &:hover span {
           text-decoration: underline;
-        }
-      }
-
-      .social-buttons {
-        margin-top: 1.5rem;
-
-        .facebook {
-          background-color: #3b5998;
-          color: white;
-          border: none;
-
-          &:hover {
-            background-color: #2d4373;
-          }
-        }
-
-        .google {
-          border: 1px solid #d9d9d9;
-          background: white;
-
-          &:hover {
-            background: #f5f5f5;
-          }
         }
       }
     }

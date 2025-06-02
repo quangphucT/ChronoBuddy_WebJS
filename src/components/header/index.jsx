@@ -1,48 +1,92 @@
+import { useEffect, useState } from "react";
+import { Image } from "antd";
 import "./index.scss";
-import { Input, Avatar, Image } from "antd";
-import { UserOutlined, SearchOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import logoBee from "../../assets/images/1740063267602.gif";
+import { useLocation, useNavigate } from "react-router-dom";
+import { UserOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 const Header = () => {
-  const userName = useSelector((store) => store?.user?.username);
+  const location = useLocation();
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  const imageUrlAfterLogin = useSelector((store) => store?.user.imageUrl);
+  const nameOnRedux = useSelector((store) => store?.user.name);
+  const isHomePage = location.pathname === "/home";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    if (isHomePage) {
+      window.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isHomePage]);
+
+  const handleNavigate = () => {
+    navigate("profile-page");
+  };
+
+  const headerClasses =
+    isHomePage && !scrolled
+      ? "bg-white/15 text-white backdrop-blur"
+      : "bg-white text-black shadow-md";
 
   return (
-    <div className="header">
-      <div className="wrapper-header-main-homeScreen">
-        <h6
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate("/home")}
-          className="logo"
-        >
-          ChronoBuddy
-        </h6>
+    <header
+      className={`fixed top-0 w-full z-50 px-7 py-1.5 flex items-center justify-between transition-all duration-300 ${headerClasses}`}
+    >
+      {/* Logo + Title */}
+      <div
+        className="flex items-center space-x-4 cursor-pointer"
+        onClick={() => navigate("/")}
+      >
         <Image
-          onClick={() => navigate("/home")}
+          src={""} // Thêm đường dẫn logo nếu có
+          width={60}
           preview={false}
-          src={logoBee}
-          width={40}
-          height={40}
+          className="rounded-full"
         />
+        <h1
+          className={`text-[29px] font-extrabold hidden sm:block ${
+            isHomePage && !scrolled
+              ? "bg-gradient-to-r from-red-500 via-yellow-400 via-green-400 via-blue-400 to-purple-500 bg-clip-text text-transparent"
+              : "text-black"
+          }`}
+        >
+          TODOLIST
+        </h1>
       </div>
-      <Input
-        placeholder="Search tasks..."
-        prefix={<SearchOutlined />}
-        className="search-bar"
-        size="large"
-      />
-      <div className="user-actions">
-        <p className="username-user">{userName}</p>
-        <Avatar
-          onClick={() => navigate("profile-page")}
-          size="large"
-          icon={<UserOutlined />}
-          className="user-avatar"
-        />
+
+      {/* Account Icon */}
+      <div className="flex items-center space-x-5">
+        {imageUrlAfterLogin ? (
+          <div className="flex space-x-3.5 items-center">
+            <p class="bg-gradient-to-r from-red-200 via-yellow-500 to-blue-500 text-transparent bg-clip-text text-[15px] font-bold">
+              {nameOnRedux}
+            </p>
+            <Image
+              src={imageUrlAfterLogin}
+              alt="avatar"
+              width={40}
+              height={40}
+              preview={false}
+              className="rounded-full cursor-pointer border border-gray-300 hover:shadow-md transition duration-300"
+              onClick={handleNavigate}
+            />
+          </div>
+        ) : (
+          <UserOutlined
+            onClick={handleNavigate}
+            className="text-2xl hover:text-[#1e88e5] transition duration-300 cursor-pointer"
+          />
+        )}
       </div>
-    </div>
+    </header>
   );
 };
 
