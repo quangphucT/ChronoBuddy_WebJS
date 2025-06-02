@@ -1,7 +1,6 @@
 import './index.scss';
 import { Form, Input, Button, Typography } from 'antd';
-
-import logoBee from '../../../assets/images/1740063267602.gif';
+import logoToDoList from '../../../assets/images/8019152.png';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'antd/es/form/Form';
 import { toast } from 'react-toastify';
@@ -45,7 +44,7 @@ const LoginPage = () => {
       <div className="login-container">
 
         <div className="bee-image">
-          <img src={logoBee} alt="Bee" />
+          <img src={logoToDoList} alt="Bee" />
         </div>
 
         <Title level={2} className="title">Welcome back!</Title>
