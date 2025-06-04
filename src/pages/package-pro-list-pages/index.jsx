@@ -15,6 +15,8 @@ const PageProListPage = () => {
   const [detailsPackage, setDetailsPackages] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
+   const [loadingSuccessBought, setLoadingSuccessBought] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
 
   const [buyModalOpen, setBuyModalOpen] = useState(false);
@@ -32,8 +34,7 @@ const PageProListPage = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const responseCode = params.get("vnp_ResponseCode");
-const transactionStatus = params.get("vnp_TransactionStatus");
-    if (responseCode === "00" && transactionStatus === "00") {
+    if (responseCode === "00") {
       const savedPackage = localStorage.getItem("pendingPackage");
       if (savedPackage) {
         setSelectedPackage(JSON.parse(savedPackage));
@@ -48,7 +49,6 @@ const transactionStatus = params.get("vnp_TransactionStatus");
       const dataAfterFilter = {
         userId: userId,
         subscriptionPlanId: selectedPackage?.id,
-        
       };
 
       const response = await paymentCreate(dataAfterFilter);
@@ -90,11 +90,14 @@ const transactionStatus = params.get("vnp_TransactionStatus");
     fetchingData();
   }, []);
   const handleSaveDataToDB = async () => {
-    setLoading(true)
+    setLoadingSuccessBought(true)
     try {
-      const dataToDB = {
+       const params = new URLSearchParams(location.search);
+       const responseCode = params.get("vnp_ResponseCode");
+       const dataToDB = {
         userId: userId,
         subscriptionPlanId: selectedPackage.id,
+        vnp_ResponseCode: responseCode,
       };
 
       await saveDataToDB(dataToDB);
@@ -105,9 +108,8 @@ const transactionStatus = params.get("vnp_TransactionStatus");
     } catch (error) {
       toast.error(error.response.data.message || "Error while handling");
     }
-    setLoading(false)
+    setLoadingSuccessBought(false)
   };
-  console.log("selectedPackage", selectedPackage);
   return (
     <div className="px-10 py-6">
       <HeroSection />
@@ -220,7 +222,7 @@ const transactionStatus = params.get("vnp_TransactionStatus");
 
       <Modal
         footer={[
-          <Button loading={loading} onClick={handleSaveDataToDB}>Oke</Button>
+          <Button loading={loadingSuccessBought} onClick={handleSaveDataToDB}>Oke</Button>
         ]}
         onCancel={handleSaveDataToDB}
         title="Payment Completed"
