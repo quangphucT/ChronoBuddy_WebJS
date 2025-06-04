@@ -7,7 +7,8 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { paymentCreate } from "../../apis/paymentCreateApi";
 import { useSelector } from "react-redux";
 import HeroSection from "../../components/atoms/carouselsub_content";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { saveDataToDB } from "../../apis/saveDataToDBApi";
 
 const PageProListPage = () => {
   const [packages, setPackages] = useState([]);
@@ -19,7 +20,7 @@ const PageProListPage = () => {
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const userId = useSelector((store) => store?.user?.id);
-
+ const navigate = useNavigate();
 const location = useLocation();
 const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
 
@@ -84,7 +85,20 @@ const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
   useEffect(() => {
     fetchingData();
   }, []);
-
+  const handleSaveDataToDB = async() =>{
+    try {
+      const dataToDB = {
+        userId: userId,
+        subscriptionPlanId: selectedPackage.id
+      }
+      await saveDataToDB(dataToDB)
+      toast.success("Thanks for your order!")
+      setSelectedPackage(null);
+      navigate("/home")
+    } catch (error) {
+      toast.error(error.response.data.message || "Error while handling")
+    }
+  }
   return (
     <div className="px-10 py-6">
       <HeroSection />
@@ -194,9 +208,10 @@ const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
       </Modal>
 
       <Modal
+       onCancel={handleSaveDataToDB}
   title="Payment Completed"
   open={showPostPaymentModal}
-  onOk={() => setShowPostPaymentModal(false)}
+  onOk={handleSaveDataToDB}
   cancelButtonProps={{ style: { display: "none" } }}
 >
   <p>🎉 Your payment was successful! Thank you for your purchase.</p>
