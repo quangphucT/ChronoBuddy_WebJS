@@ -5,10 +5,11 @@ import { getAllPackagesPro } from "../../apis/getAllPackageProApi";
 import { toast } from "react-toastify";
 import { LoadingOutlined } from "@ant-design/icons";
 import { paymentCreate } from "../../apis/paymentCreateApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import HeroSection from "../../components/atoms/carouselsub_content";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveDataToDB } from "../../apis/saveDataToDBApi";
+import { removeInformation } from "../../redux/feature/userSlice";
 
 const PageProListPage = () => {
   const [packages, setPackages] = useState([]);
@@ -22,6 +23,7 @@ const PageProListPage = () => {
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const userId = useSelector((store) => store?.user?.id);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
@@ -102,9 +104,11 @@ const PageProListPage = () => {
 
       await saveDataToDB(dataToDB);
       localStorage.removeItem("pendingPackage"); // ✅ XÓA SAU KHI LƯU DB
-      toast.success("Thanks for your order!");
+      toast.success("Thanks for your buying!");
       setSelectedPackage(null);
-      navigate("/home");
+      dispatch(removeInformation())
+      navigate("/login-page");
+      toast.warn("Please login again to experience a new version!!!")
     } catch (error) {
       toast.error(error.response.data.message || "Error while handling");
     }
