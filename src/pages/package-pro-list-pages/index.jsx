@@ -32,8 +32,8 @@ const PageProListPage = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const responseCode = params.get("vnp_ResponseCode");
-
-    if (responseCode === "00") {
+const transactionStatus = params.get("vnp_TransactionStatus");
+    if (responseCode === "00" && transactionStatus === "00") {
       const savedPackage = localStorage.getItem("pendingPackage");
       if (savedPackage) {
         setSelectedPackage(JSON.parse(savedPackage));
@@ -48,6 +48,7 @@ const PageProListPage = () => {
       const dataAfterFilter = {
         userId: userId,
         subscriptionPlanId: selectedPackage?.id,
+        
       };
 
       const response = await paymentCreate(dataAfterFilter);
@@ -215,6 +216,8 @@ const PageProListPage = () => {
         )}
       </Modal>
 
+
+
       <Modal
         footer={[
           <Button loading={loading} onClick={handleSaveDataToDB}>Oke</Button>
@@ -226,6 +229,9 @@ const PageProListPage = () => {
       >
         <p>🎉 Your payment was successful! Thank you for your purchase.</p>
       </Modal>
+
+
+
 
       {redirecting && (
         <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center space-y-4 foggy-bg">
@@ -244,3 +250,7 @@ const PageProListPage = () => {
 };
 
 export default PageProListPage;
+
+
+
+
