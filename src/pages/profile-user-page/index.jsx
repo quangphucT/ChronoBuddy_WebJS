@@ -57,7 +57,7 @@ const ProfilePage = () => {
   const handleLogout = () => {
     dispatch(removeInformation());
     navigate("/login-page");
-    localStorage.setItem("token", "");
+    localStorage.removeItem("token")
   };
   const handleSubmit = async (values) => {
     setLoading(true);
