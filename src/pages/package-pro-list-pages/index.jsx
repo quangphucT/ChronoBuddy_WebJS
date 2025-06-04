@@ -106,7 +106,8 @@ const PageProListPage = () => {
       localStorage.removeItem("pendingPackage"); // ✅ XÓA SAU KHI LƯU DB
       toast.success("Thanks for your buying!");
       setSelectedPackage(null);
-      dispatch(removeInformation())
+      dispatch(removeInformation());
+      localStorage.removeItem("token");
       navigate("/login-page");
       toast.warn("Please login again to experience a new version!!!")
     } catch (error) {
