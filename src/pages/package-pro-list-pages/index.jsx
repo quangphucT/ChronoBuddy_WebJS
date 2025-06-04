@@ -89,6 +89,7 @@ const PageProListPage = () => {
     fetchingData();
   }, []);
   const handleSaveDataToDB = async () => {
+    setLoading(true)
     try {
       const dataToDB = {
         userId: userId,
@@ -97,13 +98,13 @@ const PageProListPage = () => {
 
       await saveDataToDB(dataToDB);
       localStorage.removeItem("pendingPackage"); // ✅ XÓA SAU KHI LƯU DB
-
       toast.success("Thanks for your order!");
       setSelectedPackage(null);
       navigate("/home");
     } catch (error) {
       toast.error(error.response.data.message || "Error while handling");
     }
+    setLoading(false)
   };
   console.log("selectedPackage", selectedPackage);
   return (
@@ -215,10 +216,12 @@ const PageProListPage = () => {
       </Modal>
 
       <Modal
+        footer={[
+          <Button loading={loading} onClick={handleSaveDataToDB}>Oke</Button>
+        ]}
         onCancel={handleSaveDataToDB}
         title="Payment Completed"
         open={showPostPaymentModal}
-        onOk={handleSaveDataToDB}
         cancelButtonProps={{ style: { display: "none" } }}
       >
         <p>🎉 Your payment was successful! Thank you for your purchase.</p>
