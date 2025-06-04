@@ -91,6 +91,7 @@ const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
         userId: userId,
         subscriptionPlanId: selectedPackage.id
       }
+      console.log("DataDB", dataToDB)
       await saveDataToDB(dataToDB)
       toast.success("Thanks for your order!")
       setSelectedPackage(null);
