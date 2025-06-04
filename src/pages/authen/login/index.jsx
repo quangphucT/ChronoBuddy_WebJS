@@ -24,7 +24,7 @@ const LoginPage = () => {
       const dataUser = response.data.data;
       const { token, role } = dataUser
       localStorage.setItem("token", token)
-      if (role === 'FREE') {
+      if (role === 'FREE' || role === 'PREMIUM') {
         navigate("/home")
       } else if (role === 'ADMIN') {
         navigate("/dashboard")
