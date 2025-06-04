@@ -5,7 +5,6 @@ import {
   Card,
   Button,
   Progress,
-  Avatar,
   Modal,
   Form,
   Input,
@@ -13,7 +12,7 @@ import {
   DatePicker,
   Image,
 } from "antd";
-import { PlusOutlined, UserOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
