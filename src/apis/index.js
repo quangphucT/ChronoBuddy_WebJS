@@ -20,3 +20,4 @@ export * as getAllPackagePro from './getAllPackageProApi'
 
 export * as deletePackagePro from './deletePackageProApi'
 export * as paymentCreate from './paymentCreateApi'
+export * as saveDataToDB from './saveDataToDBApi'
