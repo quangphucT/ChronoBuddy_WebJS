@@ -20,25 +20,27 @@ const PageProListPage = () => {
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const userId = useSelector((store) => store?.user?.id);
- const navigate = useNavigate();
-const location = useLocation();
-const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
 
   const handleBuyClick = (pkg) => {
     setSelectedPackage(pkg);
     setBuyModalOpen(true);
   };
 
-
   useEffect(() => {
-  const params = new URLSearchParams(location.search);
-  const responseCode = params.get("vnp_ResponseCode");
+    const params = new URLSearchParams(location.search);
+    const responseCode = params.get("vnp_ResponseCode");
 
-  if (responseCode === "00") {
-    setShowPostPaymentModal(true);
-  }
-}, [location.search]);
-
+    if (responseCode === "00") {
+      const savedPackage = localStorage.getItem("pendingPackage");
+      if (savedPackage) {
+        setSelectedPackage(JSON.parse(savedPackage));
+        setShowPostPaymentModal(true);
+      }
+    }
+  }, [location.search]);
 
   const confirmPurchase = async () => {
     try {
@@ -53,6 +55,7 @@ const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
       const paymentUrl = response.data; // vì trả về trực tiếp chuỗi URL
 
       if (paymentUrl) {
+        localStorage.setItem("pendingPackage", JSON.stringify(selectedPackage));
         window.location.href = paymentUrl; // 🔁 Redirect sang VNPay
       } else {
         toast.error("Không nhận được link thanh toán.");
@@ -85,21 +88,24 @@ const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
   useEffect(() => {
     fetchingData();
   }, []);
-  const handleSaveDataToDB = async() =>{
+  const handleSaveDataToDB = async () => {
     try {
       const dataToDB = {
         userId: userId,
-        subscriptionPlanId: selectedPackage.id
-      }
-      console.log("DataDB", dataToDB)
-      await saveDataToDB(dataToDB)
-      toast.success("Thanks for your order!")
+        subscriptionPlanId: selectedPackage.id,
+      };
+
+      await saveDataToDB(dataToDB);
+      localStorage.removeItem("pendingPackage"); // ✅ XÓA SAU KHI LƯU DB
+
+      toast.success("Thanks for your order!");
       setSelectedPackage(null);
-      navigate("/home")
+      navigate("/home");
     } catch (error) {
-      toast.error(error.response.data.message || "Error while handling")
+      toast.error(error.response.data.message || "Error while handling");
     }
-  }
+  };
+  console.log("selectedPackage", selectedPackage);
   return (
     <div className="px-10 py-6">
       <HeroSection />
@@ -209,15 +215,14 @@ const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
       </Modal>
 
       <Modal
-       onCancel={handleSaveDataToDB}
-  title="Payment Completed"
-  open={showPostPaymentModal}
-  onOk={handleSaveDataToDB}
-  cancelButtonProps={{ style: { display: "none" } }}
->
-  <p>🎉 Your payment was successful! Thank you for your purchase.</p>
-</Modal>
-
+        onCancel={handleSaveDataToDB}
+        title="Payment Completed"
+        open={showPostPaymentModal}
+        onOk={handleSaveDataToDB}
+        cancelButtonProps={{ style: { display: "none" } }}
+      >
+        <p>🎉 Your payment was successful! Thank you for your purchase.</p>
+      </Modal>
 
       {redirecting && (
         <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center space-y-4 foggy-bg">
