@@ -1,48 +1,70 @@
-import { Card, Modal, Spin } from "antd";
+import { Card, Col, Modal, Row, Spin } from "antd";
 import { useEffect, useState } from "react";
-import "./index.scss"; 
+import "./index.scss";
 import { getAllPackagesPro } from "../../apis/getAllPackageProApi";
 import { toast } from "react-toastify";
 import { LoadingOutlined } from "@ant-design/icons";
 import { paymentCreate } from "../../apis/paymentCreateApi";
 import { useSelector } from "react-redux";
+import HeroSection from "../../components/atoms/carouselsub_content";
+import { useLocation } from "react-router-dom";
 
 const PageProListPage = () => {
   const [packages, setPackages] = useState([]);
   const [detailsPackage, setDetailsPackages] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
 
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
-  const userId = useSelector((store) => store?.user?.id)
+  const userId = useSelector((store) => store?.user?.id);
+
+const location = useLocation();
+const [showPostPaymentModal, setShowPostPaymentModal] = useState(false);
+
   const handleBuyClick = (pkg) => {
     setSelectedPackage(pkg);
     setBuyModalOpen(true);
   };
-  const confirmPurchase = async () => {
-  try {
-    const dataAfterFilter = {
-      userId: userId,
-      subscriptionPlanId: selectedPackage?.id,
-    };
 
-    const response = await paymentCreate(dataAfterFilter);
 
-    const paymentUrl = response.data; // vì trả về trực tiếp chuỗi URL
+  useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const responseCode = params.get("vnp_ResponseCode");
 
-    if (paymentUrl) {
-      window.location.href = paymentUrl; // 🔁 Redirect sang VNPay
-    } else {
-      toast.error("Không nhận được link thanh toán.");
-    }
-
-    setSelectedPackage(null);
-    setBuyModalOpen(false);
-  } catch (error) {
-    toast.error(error.response?.data?.message || "Error while handling");
+  if (responseCode === "00") {
+    setShowPostPaymentModal(true);
   }
-};
+}, [location.search]);
+
+
+  const confirmPurchase = async () => {
+    try {
+      setRedirecting(true);
+      const dataAfterFilter = {
+        userId: userId,
+        subscriptionPlanId: selectedPackage?.id,
+      };
+
+      const response = await paymentCreate(dataAfterFilter);
+
+      const paymentUrl = response.data; // vì trả về trực tiếp chuỗi URL
+
+      if (paymentUrl) {
+        window.location.href = paymentUrl; // 🔁 Redirect sang VNPay
+      } else {
+        toast.error("Không nhận được link thanh toán.");
+        setRedirecting(false);
+      }
+
+      setSelectedPackage(null);
+      setBuyModalOpen(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error while handling");
+      setRedirecting(false);
+    }
+  };
 
   const fetchingData = async () => {
     setLoading(true);
@@ -65,6 +87,9 @@ const PageProListPage = () => {
 
   return (
     <div className="px-10 py-6">
+      <HeroSection />
+      <div className="w-full h-0.5 bg-gray-300 my-4 mt-[-100px]" />
+
       <h2 className="text-2xl font-bold mb-6">Available Pro Packages</h2>
       <Spin
         spinning={loading}
@@ -151,7 +176,10 @@ const PageProListPage = () => {
       <Modal
         title="Confirm Purchase"
         open={buyModalOpen}
-        onCancel={() => {setBuyModalOpen(false); setSelectedPackage(null)}}
+        onCancel={() => {
+          setBuyModalOpen(false);
+          setSelectedPackage(null);
+        }}
         onOk={confirmPurchase}
         okText="Yes, Buy"
         cancelText="Cancel"
@@ -164,6 +192,29 @@ const PageProListPage = () => {
           </p>
         )}
       </Modal>
+
+      <Modal
+  title="Payment Completed"
+  open={showPostPaymentModal}
+  onOk={() => setShowPostPaymentModal(false)}
+  cancelButtonProps={{ style: { display: "none" } }}
+>
+  <p>🎉 Your payment was successful! Thank you for your purchase.</p>
+</Modal>
+
+
+      {redirecting && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center space-y-4 foggy-bg">
+          <Spin
+            indicator={
+              <LoadingOutlined style={{ fontSize: 48, color: "#fff" }} spin />
+            }
+          />
+          <p className="text-white text-xl font-semibold animate-pulse">
+            Please waiting a minute...
+          </p>
+        </div>
+      )}
     </div>
   );
 };

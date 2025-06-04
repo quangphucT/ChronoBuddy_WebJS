@@ -1,0 +1,7 @@
+.foggy-bg {
+  background-image: url('/assets/images/your-bg.jpg'); // <-- thay đường dẫn đúng với ảnh nền của bạn
+  background-size: cover;
+  background-position: center;
+  backdrop-filter: blur(2px); // tạo hiệu ứng sương mù
+  background-color: rgba(0, 0, 0, 0.04); // lớp phủ mờ tối
+}
