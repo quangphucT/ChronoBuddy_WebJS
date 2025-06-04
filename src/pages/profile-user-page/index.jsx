@@ -28,8 +28,8 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
   const username = useSelector((store) => store?.user?.username);
-  const user_id = useSelector((store) => store?.user.id);
-  const imageUrl = useSelector((store) => store?.user.imageUrl);
+  const user_id = useSelector((store) => store?.user?.id);
+  const imageUrl = useSelector((store) => store?.user?.imageUrl);
   console.log("ID:", user_id)
 
    const dataUserOnRedux = useSelector((store) => store?.user)

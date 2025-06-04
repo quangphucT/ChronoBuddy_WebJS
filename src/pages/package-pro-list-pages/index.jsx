@@ -24,7 +24,7 @@ const PageProListPage = () => {
   try {
     const dataAfterFilter = {
       userId: userId,
-      subscriptionPlanId: selectedPackage.id,
+      subscriptionPlanId: selectedPackage?.id,
     };
 
     const response = await paymentCreate(dataAfterFilter);

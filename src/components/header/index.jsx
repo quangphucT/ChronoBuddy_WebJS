@@ -9,8 +9,8 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
-  const imageUrlAfterLogin = useSelector((store) => store?.user.imageUrl);
-  const nameOnRedux = useSelector((store) => store?.user.name);
+  const imageUrlAfterLogin = useSelector((store) => store?.user?.imageUrl);
+  const nameOnRedux = useSelector((store) => store?.user?.name);
   const isHomePage = location.pathname === "/home";
 
   useEffect(() => {
@@ -45,12 +45,7 @@ const Header = () => {
         className="flex items-center space-x-4 cursor-pointer"
         onClick={() => navigate("/")}
       >
-        <Image
-          src={""} // Thêm đường dẫn logo nếu có
-          width={60}
-          preview={false}
-          className="rounded-full"
-        />
+
         <h1
           className={`text-[29px] font-extrabold hidden sm:block ${
             isHomePage && !scrolled
