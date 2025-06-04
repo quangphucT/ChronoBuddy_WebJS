@@ -19,6 +19,8 @@ import PrivateRoute from "./pages/private-route";
 import UserManagement from "./pages/dashboard-management/admin/user-management";
 import UserDeleteManagement from "./pages/dashboard-management/admin/user-delete-management";
 import TaskDetailsWorkSpace from "./pages/task-details_WorkSpace";
+import ManagexAdvancedPackage from "./pages/management-advancedPackage";
+import PageProListPage from "./pages/package-pro-list-pages";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -41,6 +43,11 @@ const App = () => {
           {
           path: "tasks-details/:id",
           element: <TaskDetailsWorkSpace />,
+        },
+
+          {
+          path: "PageProListPage",
+          element: <PageProListPage />,
         },
       ],
     },
@@ -84,6 +91,10 @@ const App = () => {
         {
           path: "statistic",
           element: <StatisticsManagement />,
+        },
+        {
+          path: "manage-advancedPackage",
+          element: <ManagexAdvancedPackage />,
         },
          {
           path: "user-management",
