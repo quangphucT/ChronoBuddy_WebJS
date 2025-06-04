@@ -64,6 +64,13 @@ const Header = () => {
 
       {/* Account Icon */}
       <div className="flex items-center space-x-5">
+
+          <button
+    onClick={() => navigate("PageProListPage")}
+    className="bg-gradient-to-r cursor-pointer from-yellow-400 to-red-400 text-white font-semibold px-4 py-1.5 rounded-full hover:brightness-110 transition duration-300"
+  >
+    Nâng cấp Pro
+  </button>
         {imageUrlAfterLogin ? (
           <div className="flex space-x-3.5 items-center">
             <p class="bg-gradient-to-r from-red-200 via-yellow-500 to-blue-500 text-transparent bg-clip-text text-[15px] font-bold">

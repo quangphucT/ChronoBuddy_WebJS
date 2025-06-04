@@ -19,6 +19,7 @@ const items = [
   getItem("Statistics", "statistic", <PieChartOutlined />),
   getItem("User Management", "user-management", <UserOutlined />),
   getItem("User Delete Management", "user-delete-management", <UserOutlined />),
+   getItem("PackagePro Management", "manage-advancedPackage", <UserOutlined />),
 ];
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
