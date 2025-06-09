@@ -73,8 +73,8 @@ const TaskDetailsWorkSpace = () => {
       dataIndex: "status",
       key: "status",
       render: (status) => {
-        if (!status) return <Tag color="default">Chưa cập nhật</Tag>;
-        if (status === "chua xong") return <Tag color="red">Chưa xong</Tag>;
+        if (status !== "PENDING") return <Tag color="default">Completed </Tag>;
+        if (status === "PENDING") return <Tag color="red">PENDING</Tag>;
         return <Tag color="green">{status}</Tag>;
       },
     },

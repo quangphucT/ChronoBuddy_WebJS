@@ -23,6 +23,7 @@ const PageProListPage = () => {
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const userId = useSelector((store) => store?.user?.id);
+  const role = useSelector((store) => store?.user?.role)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -46,7 +47,13 @@ const PageProListPage = () => {
   }, [location.search]);
 
   const confirmPurchase = async () => {
-    try {
+    if(role === "PREMIUM"){
+      toast.info("You already have a Premium account.")
+      setSelectedPackage(null);
+      setBuyModalOpen(false);
+      return;
+    }else{
+ try {
       setRedirecting(true);
       const dataAfterFilter = {
         userId: userId,
@@ -71,6 +78,8 @@ const PageProListPage = () => {
       toast.error(error.response?.data?.message || "Error while handling");
       setRedirecting(false);
     }
+    }
+   
   };
 
   const fetchingData = async () => {
@@ -151,6 +160,7 @@ const PageProListPage = () => {
               </p>
 
               <div className="mt-5 flex space-x-3">
+              
                 <button
                   onClick={() => handleBuyClick(pkg)}
                   type="button"
