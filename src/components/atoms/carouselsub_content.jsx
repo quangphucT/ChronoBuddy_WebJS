@@ -1,10 +1,9 @@
-import { Row, Col, Button } from "antd";
+import { Row, Col } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+
 import logoTODOLIST from "../../assets/images/business-team-meeting-boardroom.jpg";
 import './index.scss'
 const HomePageIntro = () => {
-  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex items-center bg-white ">
@@ -28,7 +27,7 @@ const HomePageIntro = () => {
             project-wise — all in one place!
           </p>
           <button
-            onClick={() => navigate("/home-page-lets-start")}
+          
             type="primary"
             size="large"
             icon={<ArrowRightOutlined />}
