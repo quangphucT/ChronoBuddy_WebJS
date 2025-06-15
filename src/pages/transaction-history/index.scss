@@ -1,0 +1,45 @@
+.payment-history-wrapper {
+  position: relative;
+  min-height: 100vh;
+  background-image: url('../../assets/images/business-team-meeting-boardroom.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  z-index: 1;
+
+  // lớp overlay mờ tối
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); // màu đen mờ, điều chỉnh opacity ở đây
+    z-index: -1;
+  }
+.payment-history-card {
+    background: rgba(255, 255, 255, 0.68);
+    backdrop-filter: blur(1px);
+
+    padding: 20px;
+    width: 100%;
+    max-width: 1000px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+}
+.payment-history-title {
+  display: flex;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #1e88e5; // màu chủ đạo bạn đang dùng
+  margin-bottom: 24px;
+  gap: 12px;
+
+  i {
+    font-size: 32px;
+    color: #1e88e5;
+  }
+}
+

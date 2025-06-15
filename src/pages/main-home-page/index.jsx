@@ -26,8 +26,11 @@ import { addTaskToWS } from "../../apis/addTaskToWSApi";
 import { useNavigate } from "react-router-dom";
 import Carousel from "../../components/carousel";
 import AboutSection from "../../components/subTitleMainHome";
+import { addMemberApi } from "../../apis/addMemberToWorkSpaceApi";
 
 const HomePage = () => {
+  const [isOpenModalAddmember, setOpenModalAddMember] = useState(false);
+  const [formAddMember] = Form.useForm();
   const today = new Date().toLocaleDateString("en-US", { weekday: "long" }); // Hiển thị ngày hiện tại
   const username = useSelector((store) => store?.user?.username);
   const user_id = useSelector((store) => store?.user?.id);
@@ -128,6 +131,28 @@ const HomePage = () => {
   const handleNavigateToTaskDetails = (workspaceId) => {
     navigate(`tasks-details/${workspaceId}`);
   };
+
+  const handleSubmitAddMember = async (values) => {
+    setLoading(true);
+    try {
+      await addMemberApi(workSpaceId, values);
+      toast.success("Added successfully!");
+      formAddMember.resetFields();
+      setOpenModalAddMember(false);
+      setWorkSpaceId("");
+    } catch (error) {
+      toast.error(error?.response?.data?.message?.error);
+    }
+    setLoading(false);
+  };
+  const handleOpenModalAddMemberToWorkSpace = (id) => {
+    setWorkSpaceId(id);
+    setOpenModalAddMember(true);
+  };
+
+  const handleNavigatePageMember = (id) =>{
+    navigate(`MembersInWorkSpace/${id}`)
+  }
   return (
     <div>
       <Carousel />
@@ -219,70 +244,110 @@ const HomePage = () => {
           </Card>
         </div>
 
-       <h3 className="text-2xl font-semibold mb-6 text-gray-800">Your Workspaces</h3>
-<Row gutter={[16, 16]}>
-  {workSpaces.length === 0 ? (
-    <Col span={24}>
-      <div className="p-6 bg-gray-100 rounded shadow text-center text-gray-500 font-medium">
-        No workspace found.
-      </div>
-    </Col>
-  ) : (
-    workSpaces.map((workspace) => (
-      <Col xs={24} sm={12} md={8} key={workspace.id}>
-        <div className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-xl transition-shadow duration-300">
-          <h4 className="text-xl font-bold mb-3 text-indigo-700">{workspace.name}</h4>
+        <h3 className="text-2xl font-semibold mb-6 text-gray-800">
+          Your Workspaces
+        </h3>
+        <Row gutter={[16, 16]}>
+          {workSpaces.length === 0 ? (
+            <Col span={24}>
+              <div className="p-6 bg-gray-100 rounded shadow text-center text-gray-500 font-medium">
+                No workspace found.
+              </div>
+            </Col>
+          ) : (
+            workSpaces.map((workspace) => (
+              <Col xs={24} sm={12} md={8} key={workspace.id}>
+                <div className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-xl transition-shadow duration-300">
+                  <h4 className="text-xl font-bold mb-3 text-indigo-700">
+                    {workspace.name}
+                  </h4>
 
-          <div className="flex flex-col space-y-3 mb-4">
-            <button
-              onClick={() => handleAddTaskToWorkSpace(workspace.id)}
-              className="bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white font-semibold py-2 rounded-md transition-colors duration-200"
-            >
-              Add Tasks To Your WorkSpace
-            </button>
-            <button
-              onClick={() => handleNavigateToTaskDetails(workspace.id)}
-              className="bg-gray-200 cursor-pointer hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-md transition-colors duration-200"
-            >
-              View Tasks
-            </button>
-          </div>
+                  <div className="flex flex-col space-y-3 mb-4">
+                    <button
+                      onClick={() => handleAddTaskToWorkSpace(workspace.id)}
+                      className="bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white font-semibold py-2 rounded-md transition-colors duration-200"
+                    >
+                      Add Tasks To Your WorkSpace
+                    </button>
+                    <div className="flex space-x-1.5">
+                      <button
+                        onClick={() =>
+                          handleNavigateToTaskDetails(workspace.id)
+                        }
+                        className="bg-gray-200 cursor-pointer flex-1/2 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-md transition-colors duration-200"
+                      >
+                        View Tasks
+                      </button>
 
-          <p className="text-gray-500 mb-4">
-            <strong className="text-gray-700">Created At:</strong>{" "}
-            {dayjs(workspace.createdAt).format("DD/MM/YYYY")}
-          </p>
+                      <button
+                        className="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-md transition-colors duration-200"
+                        onClick={() => handleNavigatePageMember(workspace.id)}
+                      >
+                        View Members
+                      </button>
+                    </div>
+                  </div>
 
-          <div className="flex gap-4">
-            <button
-              className="bg-green-600 cursor-pointer hover:bg-green-700 text-white font-extrabold px-8 py-2 rounded-md transition-colors duration-200"
-              onClick={() => {
-                setOpenModalUpdate(true);
-                formUpdate.setFieldsValue(workspace);
-              }}
-            >
-              Edit
-            </button>
+                  <p className="text-gray-500 mb-4">
+                    <strong className="text-gray-700">Created At:</strong>{" "}
+                    {dayjs(workspace.createdAt).format("DD/MM/YYYY")}
+                  </p>
+                  <button
+                    className="bg-gradient-to-r cursor-pointer mb-2 from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 
+             text-white font-semibold text-sm sm:text-base px-6 sm:px-8 py-2 sm:py-2.5 
+             rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+                    onClick={() => {
+                      handleOpenModalAddMemberToWorkSpace(workspace.id);
+                    }}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                      Add Other Members
+                    </span>
+                  </button>
+                  <div className="flex gap-4">
+                    <button
+                      className="bg-green-600 cursor-pointer hover:bg-green-700 text-white font-extrabold px-8 py-2 rounded-md transition-colors duration-200"
+                      onClick={() => {
+                        setOpenModalUpdate(true);
+                        formUpdate.setFieldsValue(workspace);
+                      }}
+                    >
+                      Edit
+                    </button>
 
-            <Popconfirm
-              title="Are you sure to delete this workspace?"
-              onConfirm={() => handleDeleteWorkSpace(workspace.id)}
-            >
-              <button
-                disabled={loading}
-                className={`bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold px-8 py-2 rounded-md transition-colors duration-200 ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                Delete
-              </button>
-            </Popconfirm>
-          </div>
-        </div>
-      </Col>
-    ))
-  )}
-</Row>
+                    <Popconfirm
+                      title="Are you sure to delete this workspace?"
+                      onConfirm={() => handleDeleteWorkSpace(workspace.id)}
+                    >
+                      <button
+                        disabled={loading}
+                        className={`bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold px-8 py-2 rounded-md transition-colors duration-200 ${
+                          loading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                      >
+                        Delete
+                      </button>
+                    </Popconfirm>
+                  </div>
+                </div>
+              </Col>
+            ))
+          )}
+        </Row>
 
         {/* Add workSpace */}
         <Modal
@@ -356,6 +421,7 @@ const HomePage = () => {
             </Form.Item>
           </Form>
         </Modal>
+
         <Modal
           title="Add new task to your workspace!"
           open={openAddTaskModal}
@@ -418,6 +484,53 @@ const HomePage = () => {
               rules={[{ required: true, message: "Please pick due date" }]}
             >
               <DatePicker showTime style={{ width: "100%" }} />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        {/* add member */}
+        <Modal
+          title="Add other members"
+          onCancel={() => {
+            setOpenModalAddMember(false);
+            formAddMember.resetFields();
+          }}
+          open={isOpenModalAddmember}
+          footer={[
+            <Button
+              onClick={() => {
+                setOpenModalAddMember(false);
+                formAddMember.resetFields();
+              }}
+            >
+              Cancel
+            </Button>,
+            <Button
+              loading={loading}
+              onClick={() => {
+                formAddMember.submit();
+              }}
+            >
+              Save
+            </Button>,
+          ]}
+        >
+          <Form
+            labelCol={{ span: 24 }}
+            form={formAddMember}
+            onFinish={handleSubmitAddMember}
+          >
+            <Form.Item
+              label="User ID"
+              name={"userId"}
+              rules={[
+                {
+                  required: true,
+                  message: "User ID is required!!",
+                },
+              ]}
+            >
+              <Input placeholder="Add userid" />
             </Form.Item>
           </Form>
         </Modal>
