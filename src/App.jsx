@@ -21,6 +21,8 @@ import UserDeleteManagement from "./pages/dashboard-management/admin/user-delete
 import TaskDetailsWorkSpace from "./pages/task-details_WorkSpace";
 import ManagexAdvancedPackage from "./pages/management-advancedPackage";
 import PageProListPage from "./pages/package-pro-list-pages";
+import MembersInWorkSpace from "./pages/member-in-workSpace";
+import TransactionHistory from "./pages/transaction-history";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -48,6 +50,15 @@ const App = () => {
           {
           path: "PageProListPage",
           element: <PageProListPage />,
+        },
+         {
+          path: "MembersInWorkSpace/:id",
+          element: <MembersInWorkSpace />,
+        },
+
+         {
+          path: "transaction-history",
+          element: <TransactionHistory />,
         },
       ],
     },
