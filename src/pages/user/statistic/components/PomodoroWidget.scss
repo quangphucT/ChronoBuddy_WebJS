@@ -1,0 +1,122 @@
+.pomodoro-widget {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%);
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .ant-typography {
+      color: #333 !important;
+      font-weight: 600;
+    }
+
+    .ant-btn-link {
+      color: #ff6b35;
+      font-size: 12px;
+      
+      &:hover {
+        color: #e55a2b;
+      }
+    }
+  }
+
+  .timer-display-mini {
+    text-align: center;
+    margin: 16px 0;
+
+    .ant-progress-circle {
+      .ant-progress-text {
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+        color: #333 !important;
+      }
+    }
+  }
+
+  .timer-controls-mini {
+    text-align: center;
+    margin: 12px 0;
+
+    .ant-btn {
+      border-radius: 6px;
+      font-size: 12px;
+      height: 28px;
+      padding: 0 12px;
+      font-weight: 500;
+
+      &.ant-btn-primary {
+        background-color: #ff6b35;
+        border-color: #ff6b35;
+
+        &:hover {
+          background-color: #e55a2b !important;
+          border-color: #e55a2b !important;
+        }
+      }
+    }
+  }
+
+  .session-count {
+    text-align: center;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 107, 53, 0.1);
+
+    .anticon {
+      font-size: 14px;
+    }
+  }
+}
+
+// Running animation
+.pomodoro-widget.running {
+  .timer-display-mini {
+    .ant-progress-circle {
+      animation: pulse 2s infinite ease-in-out;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .pomodoro-widget {
+    .timer-display-mini {
+      .ant-progress-circle {
+        width: 60px !important;
+        height: 60px !important;
+      }
+
+      .ant-progress-text {
+        font-size: 10px !important;
+      }
+    }
+
+    .timer-controls-mini {
+      .ant-btn {
+        font-size: 11px;
+        height: 24px;
+        padding: 0 8px;
+      }
+    }
+  }
+}

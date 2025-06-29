@@ -1,57 +1,302 @@
-.statistics-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
-  gap: 24px;
-  padding: 20px;
-  background-color: #e9f1fb;
-}
-
-.statistics-card {
-  background-color: #fff;
+// Statistics Dashboard Professional Styling
+.statistics-dashboard {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
   padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
 
-.header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
+  // Header Section
+  .dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 32px;
+    border-radius: 16px;
+    margin-bottom: 32px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
-  h2 {
-    font-size: 18px;
-    color: #1e88e5;
-    margin: 0;
-  }
-}
-
-.select-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-
-  span {
-    font-weight: 500;
-    min-width: 50px;
-  }
-
-  .ant-select,
-  .ant-input {
-    min-width: 120px;
-  }
-}
-
-.result {
-  h3 {
-    margin: 0;
-    font-size: 16px;
-    color: #333;
-
-    .amount {
-      font-weight: bold;
-      color: #388e3c;
+    .page-title {
+      color: white !important;
+      margin-bottom: 8px !important;
+      font-size: 32px !important;
+      font-weight: 700 !important;
+      
+      .title-icon {
+        margin-right: 12px;
+        font-size: 36px;
+      }
     }
+
+    .page-subtitle {
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+
+  // Overview Statistics Cards
+  .overview-section {
+    margin-bottom: 32px;
+
+    .stat-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: none;
+      background: white;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      }
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      &.yearly-card::before {
+        background: linear-gradient(90deg, #1890ff 0%, #40a9ff 100%);
+      }
+
+      &.monthly-card::before {
+        background: linear-gradient(90deg, #52c41a 0%, #73d13d 100%);
+      }
+
+      &.package-year-card::before {
+        background: linear-gradient(90deg, #722ed1 0%, #9254de 100%);
+      }
+
+      &.package-month-card::before {
+        background: linear-gradient(90deg, #fa8c16 0%, #ffa940 100%);
+      }
+
+      .ant-statistic-title {
+        font-weight: 600 !important;
+        color: #595959 !important;
+        font-size: 14px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .ant-statistic-content {
+        margin-bottom: 12px !important;
+      }
+
+      .stat-meta {
+        border-top: 1px solid #f0f0f0;
+        padding-top: 12px;
+        text-align: center;
+      }
+    }
+  }
+
+  // Control Cards Section
+  .control-section,
+  .package-section {
+    margin-bottom: 32px;
+
+    .control-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: none;
+      background: white;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+      }
+
+      .ant-card-head {
+        border-bottom: 2px solid #f0f0f0;
+        background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
+
+        .ant-card-head-title {
+          font-weight: 600;
+          color: #262626;
+          
+          .anticon {
+            margin-right: 8px;
+            color: #667eea;
+          }
+        }
+      }
+
+      .ant-card-body {
+        padding: 24px;
+      }
+
+      .control-group {
+        margin-bottom: 16px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .ant-typography {
+          color: #595959;
+          font-weight: 600;
+          margin-bottom: 0 !important;
+        }
+
+        .ant-select,
+        .ant-input {
+          border-radius: 8px;
+          border: 2px solid #e8e8e8;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: #40a9ff;
+          }
+
+          &:focus,
+          &.ant-select-focused {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+          }
+        }
+
+        .ant-btn {
+          border-radius: 8px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          border: none;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+
+          .anticon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  // Responsive Design
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    .dashboard-header {
+      padding: 24px 16px;
+
+      .page-title {
+        font-size: 24px !important;
+      }
+    }
+
+    .overview-section {
+      margin-bottom: 24px;
+    }
+
+    .control-section,
+    .package-section {
+      margin-bottom: 24px;
+
+      .control-card {
+        .ant-card-body {
+          padding: 16px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .dashboard-header {
+      .page-title {
+        font-size: 20px !important;
+        
+        .title-icon {
+          font-size: 24px;
+        }
+      }
+
+      .page-subtitle {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Global Ant Design Overrides for Professional Look
+.ant-statistic-content-value {
+  font-weight: 700 !important;
+  font-family: 'Inter', 'Segoe UI', sans-serif !important;
+}
+
+.ant-card {
+  transition: all 0.3s ease !important;
+}
+
+.ant-btn-loading {
+  pointer-events: none;
+}
+
+// Custom animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statistics-dashboard {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.stat-card {
+  animation: fadeInUp 0.6s ease-out;
+  animation-delay: 0.1s;
+  animation-fill-mode: both;
+}
+
+.control-card {
+  animation: fadeInUp 0.6s ease-out;
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+}
+
+// Loading states
+.ant-spin-container {
+  transition: opacity 0.3s ease;
+}
+
+.ant-spin-blur {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// Select dropdown styling
+.ant-select-dropdown {
+  border-radius: 8px !important;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+.ant-select-item {
+  border-radius: 6px !important;
+  margin: 2px 8px !important;
+  
+  &:hover {
+    background-color: #f0f8ff !important;
+  }
+  
+  &.ant-select-item-option-selected {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
   }
 }

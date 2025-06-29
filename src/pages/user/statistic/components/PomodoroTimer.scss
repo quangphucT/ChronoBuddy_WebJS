@@ -1,0 +1,418 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// Variables
+$primary-color: #ff6b35;
+$work-color: #ff6b35;
+$short-break-color: #52c41a;
+$long-break-color: #1890ff;
+$bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$glass-bg: rgba(255, 255, 255, 0.95);
+$shadow-light: 0 4px 20px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.15);
+
+// Modal styling
+.pomodoro-modal {
+  .ant-modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: $shadow-medium;
+    background: $glass-bg;
+    backdrop-filter: blur(20px);
+  }
+
+  .ant-modal-header {
+    background: $bg-gradient;
+    border: none;
+    padding: 16px 24px;
+
+    .ant-modal-title {
+      color: white;
+      font-weight: 600;
+    }
+  }
+
+  .ant-modal-close {
+    color: white;
+    
+    &:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  .pomodoro-modal-header {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+
+    .anticon {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+  }
+}
+
+// Main container
+.pomodoro-container {
+  padding: 24px;
+  text-align: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  // Timer display
+  .timer-display {
+    margin: 24px 0;
+
+    .timer-progress {
+      .ant-progress-text {
+        font-size: 24px !important;
+        font-weight: 600 !important;
+        font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+      }
+    }
+  }
+
+  // Session info
+  .session-info {
+    margin: 20px 0;
+
+    .ant-typography {
+      margin: 0;
+    }
+  }
+
+  // Timer controls
+  .timer-controls {
+    margin: 24px 0;
+
+    .ant-btn {
+      border-radius: 8px;
+      font-weight: 500;
+      height: 40px;
+      padding: 0 20px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-light;
+      }
+
+      &.ant-btn-primary {
+        border: none;
+        
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  // Session selector
+  .session-selector {
+    margin: 20px 0;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+
+    .ant-btn {
+      margin: 0 4px;
+      border-radius: 6px;
+      font-weight: 500;
+      height: 36px;
+      min-width: 80px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  // Statistics
+  .pomodoro-stats {
+    margin: 24px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+
+      .anticon {
+        font-size: 20px;
+      }
+
+      .ant-typography {
+        margin: 0;
+        line-height: 1.2;
+      }
+    }
+
+    .ant-divider-vertical {
+      height: 40px;
+      margin: 0 16px;
+    }
+  }
+
+  // Settings panel
+  .settings-panel {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(240, 240, 240, 0.8);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    text-align: left;
+
+    .ant-divider {
+      margin: 16px 0 12px 0;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+
+        .ant-typography {
+          margin: 0;
+          font-weight: 500;
+          color: #333;
+        }
+
+        .ant-input-number {
+          width: 80px;
+          border-radius: 6px;
+        }
+      }
+    }
+
+    .ant-btn {
+      margin-bottom: 8px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: $shadow-light;
+      }
+
+      &.ant-btn-dangerous {
+        &:hover {
+          background-color: #ff4d4f !important;
+          border-color: #ff4d4f !important;
+        }
+      }
+    }
+  }
+}
+
+// Progress circle customization
+.ant-progress-circle {
+  .ant-progress-circle-path {
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.3s ease, stroke 0.3s ease;
+  }
+
+  .ant-progress-circle-trail {
+    stroke: rgba(0, 0, 0, 0.06);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .pomodoro-modal {
+    .ant-modal-content {
+      margin: 16px;
+      max-width: calc(100vw - 32px);
+    }
+  }
+
+  .pomodoro-container {
+    padding: 16px;
+
+    .timer-display {
+      .timer-progress {
+        .ant-progress-circle {
+          width: 160px !important;
+          height: 160px !important;
+        }
+
+        .ant-progress-text {
+          font-size: 20px !important;
+        }
+      }
+    }
+
+    .settings-panel {
+      .settings-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+
+        .setting-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+
+          .ant-input-number {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .pomodoro-stats {
+      .stat-item {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .ant-divider-vertical {
+        display: none;
+      }
+    }
+
+    .session-selector {
+      .ant-btn {
+        margin: 2px;
+        font-size: 12px;
+        height: 32px;
+        min-width: 70px;
+      }
+    }
+
+    .timer-controls {
+      .ant-btn {
+        height: 36px;
+        padding: 0 16px;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .pomodoro-container {
+    .timer-display {
+      .timer-progress {
+        .ant-progress-circle {
+          width: 140px !important;
+          height: 140px !important;
+        }
+
+        .ant-progress-text {
+          font-size: 18px !important;
+        }
+      }
+    }
+
+    .timer-controls {
+      .ant-space {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .ant-btn {
+        margin: 4px 2px;
+        height: 32px;
+        padding: 0 12px;
+        font-size: 12px;
+      }
+    }
+
+    .session-selector {
+      .ant-btn {
+        font-size: 11px;
+        height: 28px;
+        min-width: 60px;
+        padding: 0 8px;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+  }
+}
+
+// Running state animations
+.timer-running {
+  .timer-progress {
+    animation: pulse 2s infinite ease-in-out;
+  }
+
+  .ant-btn-primary {
+    animation: glow 2s infinite ease-in-out;
+  }
+}
+
+// Focus mode styles
+.focus-mode {
+  .pomodoro-container {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%);
+    border-radius: 16px;
+  }
+}
+
+// Break mode styles
+.break-mode {
+  .pomodoro-container {
+    background: linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(82, 196, 26, 0.05) 100%);
+    border-radius: 16px;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .pomodoro-modal {
+    .ant-modal-content {
+      background: rgba(30, 30, 30, 0.95);
+      color: #fff;
+    }
+  }
+
+  .pomodoro-container {
+    .session-selector,
+    .pomodoro-stats {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .settings-panel {
+      background: rgba(60, 60, 60, 0.8);
+      color: #fff;
+
+      .ant-typography {
+        color: #fff !important;
+      }
+    }
+  }
+}

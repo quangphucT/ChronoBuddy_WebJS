@@ -17,9 +17,10 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { deleteTask } from "../../apis/deleteTaskApi";
+
 import { useForm } from "antd/es/form/Form";
-import { updateTask } from "../../apis/updateTaskApi";
+import { updateTask } from "../../apis/task/updateTaskApi";
+import { deleteTask } from "../../apis/task/deleteTaskApi";
 
 
 const { Title } = Typography;

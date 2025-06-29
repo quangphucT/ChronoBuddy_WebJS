@@ -1,0 +1,366 @@
+// Dashboard Layout Professional Styling
+.dashboard-layout {
+  .dashboard-sider {
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+    border-right: 1px solid #e8e8e8;
+    position: relative;
+    z-index: 10;
+
+    // Logo Section
+    .logo-container {
+      padding: 24px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        
+        .logo-icon {
+          font-size: 32px;
+          color: white;
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+        
+        .logo-text {
+          .brand-title {
+            color: white !important;
+            margin: 0 !important;
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            line-height: 1.2;
+          }
+          
+          .brand-subtitle {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-size: 12px;
+            font-weight: 500;
+            display: block;
+            margin-top: 2px;
+          }
+        }
+      }
+    }
+
+    // Navigation Menu
+    .dashboard-menu {
+      border-right: none !important;
+      background: transparent !important;
+      
+      .ant-menu-item {
+        margin: 6px 12px !important;
+        border-radius: 8px !important;
+        height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.3s ease !important;
+        
+        &:hover {
+          background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%) !important;
+          transform: translateX(4px);
+        }
+        
+        &.ant-menu-item-selected {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+          color: white !important;
+          
+          .anticon {
+            color: white !important;
+          }
+          
+          .menu-link {
+            color: white !important;
+          }
+        }
+        
+        .anticon {
+          font-size: 16px;
+          color: #595959;
+          transition: color 0.3s ease;
+        }
+        
+        .menu-link {
+          color: #595959;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s ease;
+          
+          &:hover {
+            color: #667eea;
+          }
+        }
+      }
+    }
+
+    // Sider Footer
+    .sider-footer {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      
+      .version-info {
+        text-align: center;
+        padding: 12px;
+        background: #f5f5f5;
+        border-radius: 8px;
+      }
+    }
+  }
+
+  // Main Layout
+  .site-layout {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+  }
+
+  // Header
+  .dashboard-header {
+    margin-top: 10px;
+    background: white !important;
+    padding: 0 24px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      
+      .trigger-btn {
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+        
+        &:hover {
+          background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%) !important;
+          color: #667eea !important;
+        }
+        
+        .anticon {
+          font-size: 18px;
+        }
+      }
+      
+      .page-title-section {
+        .page-title {
+          color: #262626 !important;
+          margin: 0 !important;
+          font-size: 24px !important;
+          font-weight: 600 !important;
+          line-height: 1.2;
+        }
+      }
+    }
+
+    .header-right {
+      .header-btn {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+        
+        &:hover {
+          background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%) !important;
+          color: #667eea !important;
+        }
+        
+        .anticon {
+          font-size: 16px;
+        }
+      }
+      
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%);
+        }
+        
+        .user-avatar {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border: 2px solid white;
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        
+        .user-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          
+          .ant-typography {
+            margin: 0 !important;
+            line-height: 1.2;
+          }
+          
+          .user-role {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  // Content
+  .dashboard-content {
+    margin: 24px !important;
+    
+    .content-wrapper {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      min-height: calc(100vh - 144px);
+      overflow: hidden;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .dashboard-layout {
+    .dashboard-header {
+      padding: 0 16px !important;
+      
+      .header-left {
+        gap: 12px;
+        
+        .page-title-section {
+          .page-title {
+            font-size: 20px !important;
+          }
+        }
+      }
+      
+      .header-right {
+        .user-info {
+          display: none !important;
+        }
+      }
+    }
+    
+    .dashboard-content {
+      margin: 16px !important;
+      
+      .content-wrapper {
+        min-height: calc(100vh - 120px);
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-layout {
+    .dashboard-header {
+      .header-left {
+        .page-title-section {
+          .page-title {
+            font-size: 18px !important;
+          }
+          
+          .ant-typography:last-child {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animation Enhancements
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.dashboard-sider {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.dashboard-header {
+  animation: fadeInDown 0.3s ease-out;
+}
+
+.content-wrapper {
+  animation: fadeInDown 0.4s ease-out;
+}
+
+// Ant Design Override
+.ant-layout-sider-trigger {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease !important;
+  
+  &:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+  }
+}
+
+.ant-badge-count {
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%) !important;
+  border: 2px solid white !important;
+  box-shadow: 0 2px 4px rgba(255, 71, 87, 0.3) !important;
+}
+
+.ant-dropdown {
+  .ant-dropdown-menu {
+    border-radius: 12px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+    border: 1px solid #e8e8e8 !important;
+    
+    .ant-dropdown-menu-item {
+      border-radius: 8px !important;
+      margin: 4px 8px !important;
+      
+      &:hover {
+        background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%) !important;
+      }
+      
+      &.ant-dropdown-menu-item-danger {
+        &:hover {
+          background: linear-gradient(135deg, #ffe6e6 0%, #fff0f0 100%) !important;
+          color: #ff4757 !important;
+        }
+      }
+    }
+  }
+}

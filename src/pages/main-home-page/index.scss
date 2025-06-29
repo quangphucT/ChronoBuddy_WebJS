@@ -1,115 +1,407 @@
 .homepage {
-  padding: 24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  // Hero Section
+  .hero-section {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
+    backdrop-filter: blur(10px);
+    padding: 40px 24px;
+    margin-bottom: 40px;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
 
-  .header-home-main {
-    margin-bottom: 24px;
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-    h2 {
-      margin: 0;
-      font-size: 24px;
+    .user-greeting {
+      display: flex;
+      align-items: center;
+      gap: 20px;
 
-      .username {
-        color: #1e88e5;
-        font-weight: bold;
+      .avatar-container {
+        position: relative;
+        
+        .user-avatar {
+          border-radius: 50% !important;
+          cursor: pointer;
+          border: 4px solid #fff;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+          }
+        }
+
+        .status-dot {
+          position: absolute;
+          bottom: 8px;
+          right: 8px;
+          width: 16px;
+          height: 16px;
+          background: #52c41a;
+          border: 3px solid #fff;
+          border-radius: 50%;
+        }
+      }
+
+      .greeting-text {
+        .welcome-title {
+          font-size: 32px;
+          font-weight: 700;
+          margin: 0 0 8px 0;
+          color: #2c3e50;
+          
+          .username-highlight {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+        }
+
+        .welcome-subtitle {
+          font-size: 16px;
+          color: #6c757d;
+          margin: 0;
+          font-weight: 500;
+        }
       }
     }
 
-    .ant-avatar {
-      background-color: #1e88e5;
-    }
-  }
+    .header-actions {
+      text-align: right;
+      
+      @media (max-width: 991px) {
+        text-align: center;
+        margin-top: 24px;
+      }
 
-  .main-content {
-    margin-bottom: 32px;
-
-    .today-task-card {
-      margin-bottom: 24px;
-      text-align: center;
-
-      h3 {
-        font-size: 20px;
+      .add-workspace-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        height: 48px;
+        padding: 0 32px;
+        font-size: 16px;
         font-weight: 600;
-      }
-
-      p {
-        margin: 8px 0;
-        font-size: 14px;
-        color: #666;
-      }
-
-      .task-day {
-        font-weight: bold;
-        color: #1e88e5;
-      }
-
-      .view-task-btn {
-        margin-top: 12px;
-        background-color: #1e88e5;
-        border-color: #1e88e5;
+        border-radius: 24px;
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
 
         &:hover {
-          background-color: #1565c0;
-          border-color: #1565c0;
+          transform: translateY(-2px);
+          box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
         }
       }
     }
+  }
 
-    h3 {
-      font-size: 18px;
-      margin: 24px 0 16px;
-      font-weight: 600;
-    }
+  // Dashboard Overview
+  .dashboard-overview {
+    padding: 0 24px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
 
-    .in-progress-card {
-      background-color: #f5f5f5;
-      border-radius: 8px;
-      padding: 16px;
+    .section-header {
+      text-align: center;
+      margin-bottom: 32px;
 
-      h4 {
-        margin: 0 0 8px;
-        color: #1e88e5;
-        font-weight: bold;
+      h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        margin: 0 0 8px 0;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.1);
       }
 
       p {
+        font-size: 16px;
+        color: rgba(255,255,255,0.8);
         margin: 0;
-        color: #444;
       }
     }
 
-    .task-group-card {
-      margin-bottom: 12px;
-      background-color: #e3f2fd;
+    .stats-card {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
       border: none;
-      padding: 16px;
-      border-radius: 8px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      overflow: hidden;
 
-      p {
-        margin: 0;
-        display: flex;
-        justify-content: space-between;
-        font-weight: 500;
-        color: #1e88e5;
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+      }
 
-        span {
-          color: #555;
+      .ant-card-body {
+        padding: 24px;
+      }
+
+      .card-icon {
+        font-size: 24px;
+        margin-bottom: 12px;
+        display: block;
+      }
+
+      .card-content {
+        h3 {
+          font-size: 18px;
+          font-weight: 600;
+          color: #2c3e50;
+          margin: 0 0 16px 0;
+        }
+
+        .card-subtitle {
+          color: #6c757d;
+          font-size: 14px;
+          margin: 12px 0 0 0;
+        }
+      }
+
+      &.today-tasks {
+        .progress-container {
+          display: flex;
+          justify-content: center;
+          margin: 16px 0;
+        }
+      }
+
+      &.in-progress {
+        .progress-item {
+          .progress-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+          }
+
+          .progress-desc {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 12px;
+          }
+        }
+      }
+
+      &.task-groups {
+        .group-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 0;
+          border-bottom: 1px solid #f0f0f0;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .count {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+          }
         }
       }
     }
   }
 
-  h3 {
-    font-size: 18px;
-    margin: 32px 0 16px;
-    font-weight: 600;
+  // Workspaces Section
+  .workspaces-section {
+    padding: 0 24px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 32px;
+
+      h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        margin: 0 0 8px 0;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      p {
+        font-size: 16px;
+        color: rgba(255,255,255,0.8);
+        margin: 0;
+      }
+    }
+
+    .empty-state {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+
+      .ant-card-body {
+        padding: 48px 24px;
+      }
+
+      .empty-content {
+        text-align: center;
+
+        .empty-icon {
+          font-size: 64px;
+          margin-bottom: 16px;
+          opacity: 0.7;
+        }
+
+        h3 {
+          font-size: 24px;
+          font-weight: 600;
+          color: #2c3e50;
+          margin: 0 0 8px 0;
+        }
+
+        p {
+          color: #6c757d;
+          margin: 0 0 24px 0;
+        }
+      }
+    }
+
+    .workspace-card {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      overflow: hidden;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+      }
+
+      .ant-card-head {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 16px 24px;
+
+        .workspace-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .workspace-icon {
+            font-size: 20px;
+          }
+
+          .workspace-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+          }
+        }
+
+        .workspace-actions {
+          display: flex;
+          gap: 4px;
+
+          .ant-btn {
+            border: none;
+            box-shadow: none;
+          }
+        }
+      }
+
+      .ant-card-body {
+        padding: 20px 24px 24px;
+      }
+
+      .workspace-content {
+        .workspace-meta {
+          margin-bottom: 20px;
+
+          .created-date {
+            color: #6c757d;
+            font-size: 14px;
+          }
+        }
+
+        .workspace-actions-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+
+          .action-btn {
+            height: 36px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            transition: all 0.2s ease;
+
+            &.primary {
+              background: linear-gradient(135deg, #667eea, #764ba2);
+              color: #fff;
+
+              &:hover {
+                background: linear-gradient(135deg, #5a67d8, #6b5b95);
+                transform: translateY(-1px);
+              }
+            }
+
+            &.secondary {
+              background: #f8f9fa;
+              color: #495057;
+
+              &:hover {
+                background: #e9ecef;
+                color: #343a40;
+              }
+            }
+
+            &.accent {
+              background: linear-gradient(135deg, #ffecd2, #fcb69f);
+              color: #8b4513;
+
+              &:hover {
+                background: linear-gradient(135deg, #ffd89b, #19547b);
+                color: #fff;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
-  .ant-card {
-    border-radius: 8px;
-  }
+  // Responsive
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 24px 16px;
 
-  .ant-card-head {
-    font-weight: bold;
-    color: #1e88e5;
+      .user-greeting {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+
+        .greeting-text .welcome-title {
+          font-size: 24px;
+        }
+      }
+    }
+
+    .dashboard-overview,
+    .workspaces-section {
+      padding: 0 16px 32px;
+
+      .section-header h2 {
+        font-size: 24px;
+      }
+    }
   }
 }
