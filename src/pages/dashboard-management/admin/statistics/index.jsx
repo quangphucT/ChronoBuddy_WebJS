@@ -5,10 +5,33 @@ import { getPaymentYear } from '../../../../apis/getPaymentYearApi';
 import { getPaymentMonth } from '../../../../apis/getPaymentMonthApi';
 import { getRevenueEachPackageYear } from '../../../../apis/getRevenueEachPackageYearApi';
 import { getRevenueEachPackageMonth } from '../../../../apis/getRevenueEachPackageMonthApi';
-import { Button, Card, Input, Select, Spin } from 'antd';
-import { BarChartOutlined, CalendarOutlined } from '@ant-design/icons';
+import { 
+  Button, 
+  Card, 
+  Input, 
+  Select, 
+  Spin, 
+  Row, 
+  Col, 
+  Statistic, 
+  Space,
+  Typography,
+  Divider,
+  DatePicker
+} from 'antd';
+import { 
+  BarChartOutlined, 
+  CalendarOutlined, 
+  DollarOutlined,
+  // TrendingUpOutlined,
+  SearchOutlined,
+  ReloadOutlined,
+  LineChartOutlined
+} from '@ant-design/icons';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
+const { Title, Text } = Typography;
 
 const StatisticsManagement = () => {
   const yearList = [2022, 2023, 2024, 2025];
@@ -98,137 +121,317 @@ const StatisticsManagement = () => {
 
   useEffect(() => {
     fetchPaymentYear();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year]);
 
   useEffect(() => {
     fetchPaymentMonth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yearAndMonth, month]);
 
   return (
-    <div className="statistics-wrapper" style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-      {/* Yearly Payment */}
-      <Card className="statistics-card">
-        <div className="header">
-          <BarChartOutlined style={{ fontSize: 28, marginRight: 12 }} />
-          <h2>Yearly Payment Statistics</h2>
-        </div>
+    <div className="statistics-dashboard">
+      {/* Header Section */}
+      <div className="dashboard-header">
+        <Title level={2} className="page-title">
+          <BarChartOutlined className="title-icon" />
+          Revenue Analytics Dashboard
+        </Title>
+        <Text type="secondary" className="page-subtitle">
+          Comprehensive financial insights and performance metrics
+        </Text>
+      </div>
 
-        <div className="select-group">
-          <span>Select Year:</span>
-          <Select value={year} style={{ width: 120, marginLeft: 10 }} onChange={setYear}>
-            {yearList.map((y) => <Option key={y} value={y}>{y}</Option>)}
-          </Select>
-        </div>
+      {/* Overview Cards */}
+      <Row gutter={[24, 24]} className="overview-section">
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card yearly-card">
+            <Statistic
+              title="Annual Revenue"
+              value={totalPaymentYear}
+              loading={loadingYear}
+              prefix={<DollarOutlined />}
+              suffix="₫"
+              valueStyle={{ color: '#1890ff', fontSize: '24px' }}
+              formatter={(value) => value ? value.toLocaleString("en-US") : "0"}
+            />
+            <div className="stat-meta">
+              <Text type="secondary">Year {year}</Text>
+            </div>
+          </Card>
+        </Col>
 
-        <div className="result">
-          {loadingYear ? <Spin size="large" /> : (
-            <h3>Total payment this year: <span className="amount">
-              {totalPaymentYear !== null ? totalPaymentYear.toLocaleString("en-US") + " ₫" : "No data available"}
-            </span></h3>
-          )}
-        </div>
-      </Card>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card monthly-card">
+            <Statistic
+              title="Monthly Revenue"
+              value={totalPaymentMonth}
+              loading={loadingMonth}
+              prefix={<CalendarOutlined />}
+              suffix="₫"
+              valueStyle={{ color: '#52c41a', fontSize: '24px' }}
+              formatter={(value) => value ? value.toLocaleString("en-US") : "0"}
+            />
+            <div className="stat-meta">
+              <Text type="secondary">
+                {month ? `Month ${month}/${yearAndMonth}` : "Select month"}
+              </Text>
+            </div>
+          </Card>
+        </Col>
 
-      {/* Monthly Payment */}
-      <Card className="statistics-card">
-        <div className="header">
-          <CalendarOutlined style={{ fontSize: 26, marginRight: 12 }} />
-          <h2>Monthly Payment Statistics</h2>
-        </div>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card package-year-card">
+            <Statistic
+              title="Package Revenue (Y)"
+              value={totalRevenueEachPackageYear}
+              loading={loading}
+              // prefix={<TrendingUpOutlined />}
+              suffix="₫"
+              valueStyle={{ color: '#722ed1', fontSize: '24px' }}
+              formatter={(value) => value ? value.toLocaleString("en-US") : "0"}
+            />
+            <div className="stat-meta">
+              <Text type="secondary">Plan ID: {subcriptionPlansId || "N/A"}</Text>
+            </div>
+          </Card>
+        </Col>
 
-        <div className="select-group">
-          <span>Year:</span>
-          <Select value={yearAndMonth} style={{ width: 120, margin: '0 10px' }} onChange={setYearAndMonth}>
-            {yearList.map((y) => <Option key={y} value={y}>{y}</Option>)}
-          </Select>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card package-month-card">
+            <Statistic
+              title="Package Revenue (M)"
+              value={totalRevenueEachPackageMonth}
+              loading={loadingMonthRevenue}
+              prefix={<LineChartOutlined />}
+              suffix="₫"
+              valueStyle={{ color: '#fa8c16', fontSize: '24px' }}
+              formatter={(value) => value ? value.toLocaleString("en-US") : "0"}
+            />
+            <div className="stat-meta">
+              <Text type="secondary">Plan ID: {subcriptionPlansIdMonth || "N/A"}</Text>
+            </div>
+          </Card>
+        </Col>
+      </Row>
 
-          <span>Month:</span>
-          <Select placeholder="Month" style={{ width: 120, marginLeft: 10 }} onChange={setMonth}>
-            {[...Array(12)].map((_, i) => (
-              <Option key={i + 1} value={i + 1}>Month {i + 1}</Option>
-            ))}
-          </Select>
-        </div>
+      {/* Control Panels */}
+      <Row gutter={[24, 24]} className="control-section">
+        {/* Yearly Payment Controls */}
+        <Col xs={24} lg={12}>
+          <Card 
+            title={
+              <Space>
+                <BarChartOutlined />
+                <span>Annual Revenue Analysis</span>
+              </Space>
+            }
+            className="control-card"
+            extra={
+              <Button 
+                icon={<ReloadOutlined />} 
+                onClick={fetchPaymentYear}
+                loading={loadingYear}
+                type="text"
+              />
+            }
+          >
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div className="control-group">
+                <Text strong>Select Year:</Text>
+                <Select 
+                  value={year} 
+                  style={{ width: '100%', marginTop: 8 }} 
+                  onChange={setYear}
+                  size="large"
+                >
+                  {yearList.map((y) => (
+                    <Option key={y} value={y}>{y}</Option>
+                  ))}
+                </Select>
+              </div>
+            </Space>
+          </Card>
+        </Col>
 
-        <div className="result">
-          {loadingMonth ? <Spin size="large" /> : (
-            <h3>Total payment this month: <span className="amount">
-              {totalPaymentMonth !== null ? totalPaymentMonth.toLocaleString("en-US") + " ₫" : "No data available"}
-            </span></h3>
-          )}
-        </div>
-      </Card>
+        {/* Monthly Payment Controls */}
+        <Col xs={24} lg={12}>
+          <Card 
+            title={
+              <Space>
+                <CalendarOutlined />
+                <span>Monthly Revenue Analysis</span>
+              </Space>
+            }
+            className="control-card"
+            extra={
+              <Button 
+                icon={<ReloadOutlined />} 
+                onClick={fetchPaymentMonth}
+                loading={loadingMonth}
+                type="text"
+              />
+            }
+          >
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div className="control-group">
+                <Text strong>Year:</Text>
+                <Select 
+                  value={yearAndMonth} 
+                  style={{ width: '100%', marginTop: 8 }} 
+                  onChange={setYearAndMonth}
+                  size="large"
+                >
+                  {yearList.map((y) => (
+                    <Option key={y} value={y}>{y}</Option>
+                  ))}
+                </Select>
+              </div>
 
-      {/* Subscription Revenue by Year */}
-      <Card className="statistics-card">
-        <div className="header">
-          <BarChartOutlined style={{ fontSize: 26, marginRight: 12 }} />
-          <h2>Revenue by Subscription Plan (Year)</h2>
-        </div>
+              <div className="control-group">
+                <Text strong>Month:</Text>
+                <Select 
+                  placeholder="Select month" 
+                  style={{ width: '100%', marginTop: 8 }} 
+                  onChange={setMonth}
+                  value={month}
+                  size="large"
+                >
+                  {[...Array(12)].map((_, i) => (
+                    <Option key={i + 1} value={i + 1}>
+                      {new Date(0, i).toLocaleString('en', { month: 'long' })}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+            </Space>
+          </Card>
+        </Col>
+      </Row>
 
-        <div className="select-group" style={{ marginBottom: 12 }}>
-          <span>ID:</span>
-          <Input
-            value={subcriptionPlansId}
-            onChange={(e) => setSubcriptionPlansId(e.target.value)}
-            style={{ width: 150, margin: '0 10px' }}
-          />
+      {/* Package Revenue Analysis */}
+      <Row gutter={[24, 24]} className="package-section">
+        {/* Yearly Package Revenue */}
+        <Col xs={24} lg={12}>
+          <Card 
+            title={
+              <Space>
+                {/* <TrendingUpOutlined /> */}
+                <span>Subscription Plan Revenue (Annual)</span>
+              </Space>
+            }
+            className="control-card"
+          >
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div className="control-group">
+                <Text strong>Subscription Plan ID:</Text>
+                <Input
+                  placeholder="Enter plan ID"
+                  value={subcriptionPlansId}
+                  onChange={(e) => setSubcriptionPlansId(e.target.value)}
+                  style={{ marginTop: 8 }}
+                  size="large"
+                />
+              </div>
 
-          <span>Year:</span>
-          <Select placeholder="Select year" style={{ width: 120 }} onChange={setYearSubcriptionPlans}>
-            {yearList.map((y) => <Option key={y} value={y}>{y}</Option>)}
-          </Select>
+              <div className="control-group">
+                <Text strong>Year:</Text>
+                <Select 
+                  placeholder="Select year" 
+                  style={{ width: '100%', marginTop: 8 }} 
+                  onChange={setYearSubcriptionPlans}
+                  value={yearSubcriptionPlans}
+                  size="large"
+                >
+                  {yearList.map((y) => (
+                    <Option key={y} value={y}>{y}</Option>
+                  ))}
+                </Select>
+              </div>
 
-          <Button loading={loading} onClick={fetchRevenueEachPackageYear} style={{ marginLeft: 10, backgroundColor: '#1e88e5', color: '#fff' }}>
-            Search
-          </Button>
-        </div>
+              <Button 
+                type="primary" 
+                loading={loading} 
+                onClick={fetchRevenueEachPackageYear}
+                icon={<SearchOutlined />}
+                size="large"
+                style={{ width: '100%', marginTop: 16 }}
+              >
+                Analyze Annual Revenue
+              </Button>
+            </Space>
+          </Card>
+        </Col>
 
-        <div className="result">
-          <h3>Revenue: <span className="amount">
-            {totalRevenueEachPackageYear !== null ? totalRevenueEachPackageYear.toLocaleString("en-US") + " ₫" : "No data available"}
-          </span></h3>
-        </div>
-      </Card>
+        {/* Monthly Package Revenue */}
+        <Col xs={24} lg={12}>
+          <Card 
+            title={
+              <Space>
+                <LineChartOutlined />
+                <span>Subscription Plan Revenue (Monthly)</span>
+              </Space>
+            }
+            className="control-card"
+          >
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div className="control-group">
+                <Text strong>Subscription Plan ID:</Text>
+                <Input
+                  placeholder="Enter plan ID"
+                  value={subcriptionPlansIdMonth}
+                  onChange={(e) => setSubcriptionPlansIdMonth(e.target.value)}
+                  style={{ marginTop: 8 }}
+                  size="large"
+                />
+              </div>
 
-      {/* Subscription Revenue by Month */}
-      <Card className="statistics-card">
-        <div className="header">
-          <CalendarOutlined style={{ fontSize: 26, marginRight: 12 }} />
-          <h2>Revenue by Subscription Plan (Month)</h2>
-        </div>
+              <div className="control-group">
+                <Text strong>Year:</Text>
+                <Select 
+                  placeholder="Select year" 
+                  style={{ width: '100%', marginTop: 8 }} 
+                  onChange={setYearSubcriptionPlansMonth}
+                  value={yearSubcriptionPlansMonth}
+                  size="large"
+                >
+                  {yearList.map((y) => (
+                    <Option key={y} value={y}>{y}</Option>
+                  ))}
+                </Select>
+              </div>
 
-        <div className="select-group" style={{ marginBottom: 12 }}>
-          <span>ID:</span>
-          <Input
-            value={subcriptionPlansIdMonth}
-            onChange={(e) => setSubcriptionPlansIdMonth(e.target.value)}
-            style={{ width: 150, margin: '0 10px' }}
-          />
+              <div className="control-group">
+                <Text strong>Month:</Text>
+                <Select 
+                  placeholder="Select month" 
+                  style={{ width: '100%', marginTop: 8 }} 
+                  onChange={setMonthSubcriptionPlans}
+                  value={monthSubcriptionPlans}
+                  size="large"
+                >
+                  {[...Array(12)].map((_, i) => (
+                    <Option key={i + 1} value={i + 1}>
+                      {new Date(0, i).toLocaleString('en', { month: 'long' })}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
 
-          <span>Year:</span>
-          <Select placeholder="Select year" style={{ width: 120 }} onChange={setYearSubcriptionPlansMonth}>
-            {yearList.map((y) => <Option key={y} value={y}>{y}</Option>)}
-          </Select>
-
-          <span>Month:</span>
-          <Select placeholder="Select month" style={{ width: 120, marginLeft: 10 }} onChange={setMonthSubcriptionPlans}>
-            {[...Array(12)].map((_, i) => (
-              <Option key={i + 1} value={i + 1}>Month {i + 1}</Option>
-            ))}
-          </Select>
-
-          <Button loading={loadingMonthRevenue} onClick={fetchRevenueEachPackageMonth} style={{ marginLeft: 10, backgroundColor: '#1e88e5', color: '#fff' }}>
-            Search
-          </Button>
-        </div>
-
-        <div className="result">
-          <h3>Revenue: <span className="amount">
-            {totalRevenueEachPackageMonth !== null ? totalRevenueEachPackageMonth.toLocaleString("en-US") + " ₫" : "No data available"}
-          </span></h3>
-        </div>
-      </Card>
+              <Button 
+                type="primary" 
+                loading={loadingMonthRevenue} 
+                onClick={fetchRevenueEachPackageMonth}
+                icon={<SearchOutlined />}
+                size="large"
+                style={{ width: '100%', marginTop: 16 }}
+              >
+                Analyze Monthly Revenue
+              </Button>
+            </Space>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 };

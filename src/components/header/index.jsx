@@ -1,17 +1,30 @@
 import { useEffect, useState } from "react";
-import { Image } from "antd";
+import { Image, Dropdown, Badge, Space, Button } from "antd";
 import "./index.scss";
 import { useLocation, useNavigate } from "react-router-dom";
-import { UserOutlined } from "@ant-design/icons";
+import { 
+  UserOutlined, 
+  BellOutlined, 
+  SettingOutlined, 
+  LogoutOutlined,
+  DashboardOutlined,
+  CrownOutlined,
+  HistoryOutlined
+} from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 const Header = () => {
   const location = useLocation();
+
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const imageUrlAfterLogin = useSelector((store) => store?.user?.imageUrl);
-  const nameOnRedux = useSelector((store) => store?.user?.name);
+  const nameOnRedux = useSelector((store) => store?.user?.username);
   const isHomePage = location.pathname === "/home";
+  
+ // userInformation on Redux
+   const userInformation = useSelector((store) => store?.user);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,70 +44,131 @@ const Header = () => {
     navigate("profile-page");
   };
 
+  // User dropdown menu items
+  const userMenuItems = [
+    {
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: 'Profile Settings',
+      onClick: () => navigate("profile-page"),
+    },
+    {
+      key: 'dashboard',
+      icon: <DashboardOutlined />,
+      label: 'My Dashboard',
+      onClick: () => navigate("/own-dashboard"),
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'settings',
+      icon: <SettingOutlined />,
+      label: 'Settings',
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: 'Logout',
+      danger: true,
+    },
+  ];
+
   const headerClasses =
     isHomePage && !scrolled
-      ? "bg-white/15 text-white backdrop-blur"
-      : "bg-white text-black shadow-md";
+      ? "header-transparent"
+      : "header-solid";
 
   return (
-    <header
-      className={`fixed top-0 w-full z-50 px-7 py-1.5 flex items-center justify-between transition-all duration-300 ${headerClasses}`}
-    >
-      {/* Logo + Title */}
-      <div
-        className="flex items-center space-x-4 cursor-pointer"
-        onClick={() => navigate("/")}
-      >
-
-        <h1
-          className={`text-[29px] font-extrabold hidden sm:block ${
-            isHomePage && !scrolled
-              ? "bg-gradient-to-r from-red-500 via-yellow-400 via-green-400 via-blue-400 to-purple-500 bg-clip-text text-transparent"
-              : "text-black"
-          }`}
-        >
-          TODOLIST
-        </h1>
-      </div>
-
-      {/* Account Icon */}
-      <div className="flex items-center space-x-5">
-
-          <button
-    onClick={() => navigate("transaction-history")}
-    className="bg-gradient-to-r cursor-pointer  to-red-400 text-black font-semibold px-4 py-1.5  hover:brightness-110 transition duration-300"
-  >
-    Transaction History
-  </button>
-          <button
-    onClick={() => navigate("PageProListPage")}
-    className="bg-gradient-to-r cursor-pointer from-yellow-400 to-red-400 text-white font-semibold px-4 py-1.5 rounded-full hover:brightness-110 transition duration-300"
-  >
-    Nâng cấp Pro
-  </button>
-
-
-        {imageUrlAfterLogin ? (
-          <div className="flex space-x-3.5 items-center">
-            <p class="bg-gradient-to-r from-red-200 via-yellow-500 to-blue-500 text-transparent bg-clip-text text-[15px] font-bold">
-              {nameOnRedux}
-            </p>
-            <Image
-              src={imageUrlAfterLogin}
-              alt="avatar"
-              width={40}
-              height={40}
-              preview={false}
-              className="rounded-full cursor-pointer border border-gray-300 hover:shadow-md transition duration-300"
-              onClick={handleNavigate}
-            />
+    <header className={`modern-header ${headerClasses}`}>
+      <div className="header-container">
+        {/* Logo Section */}
+        <div className="logo-section" onClick={() => navigate("/")}>
+          <div className="logo-icon">
+            <DashboardOutlined />
           </div>
-        ) : (
-          <UserOutlined
-            onClick={handleNavigate}
-            className="text-2xl hover:text-[#1e88e5] transition duration-300 cursor-pointer"
-          />
-        )}
+          <h1 className="brand-title">
+            ChronoBuddy
+          </h1>
+        </div>
+
+        {/* Navigation Actions */}
+        <div className="nav-actions">
+          {/* Quick Action Buttons */}
+          <div className="action-buttons">
+            <Button
+              type="text"
+              icon={<HistoryOutlined />}
+              onClick={() => navigate("transaction-history")}
+              className="action-btn history-btn"
+            >
+              <span className="btn-text">History</span>
+            </Button>
+
+            <Button
+              type="primary"
+              icon={<CrownOutlined />}
+              onClick={() => navigate("PageProListPage")}
+              className="action-btn upgrade-btn"
+            >
+              Upgrade Pro
+            </Button>
+
+            <Button
+              icon={<DashboardOutlined />}
+              onClick={() => navigate("/own-dashboard")}
+              className="action-btn dashboard-btn"
+            >
+              <span className="btn-text">Dashboard</span>
+            </Button>
+          </div>
+
+          {/* User Section */}
+          <div className="user-section">
+            {/* Notifications */}
+            <Badge count={3} size="small">
+              <Button
+                type="text"
+                icon={<BellOutlined />}
+                className="notification-btn"
+              />
+            </Badge>
+
+            {/* User Profile */}
+            {userInformation ? (
+              <Dropdown
+                menu={{ items: userMenuItems }}
+                placement="bottomRight"
+                trigger={['click']}
+                className="user-dropdown"
+              >
+                <div className="user-profile">
+                  <div className="user-info">
+                    <span className="user-name">{nameOnRedux}</span>
+                    <span className="user-role">Member</span>
+                  </div>
+                  <Image
+                    src={imageUrlAfterLogin}
+                    alt="avatar"
+                    width={40}
+                    height={40}
+                    preview={false}
+                    className="user-avatar"
+                  />
+                </div>
+              </Dropdown>
+            ) : (
+              <Button
+                type="text"
+                icon={<UserOutlined />}
+                onClick={handleNavigate}
+                className="login-btn"
+              >
+                Login
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );

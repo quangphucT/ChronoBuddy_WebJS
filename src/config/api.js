@@ -22,6 +22,29 @@ api.interceptors.request.use(function (config) {
   // Do something with request error
   return Promise.reject(error);
 });
+
+// Interceptor cho response để xử lý lỗi tập trung
+api.interceptors.response.use(
+  function (response) {
+    // Response thành công (status 2xx)
+    console.log("API Response:", response.config.url, response.status, response.data);
+    return response;
+  },
+  function (error) {
+    // Response lỗi (status khác 2xx)
+    console.error("API Error:", error.config?.url, error.response?.status, error.response?.data);
+    
+    // Xử lý các trường hợp lỗi đặc biệt
+    if (error.response?.status === 401) {
+      // Unauthorized - có thể token expired
+      console.warn("Unauthorized access - token may be expired");
+      // Có thể redirect về login page ở đây
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 export default api;
 
 

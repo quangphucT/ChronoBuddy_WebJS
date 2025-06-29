@@ -1,0 +1,282 @@
+// Dashboard Overview Styling
+.dashboard-overview {
+  padding: 32px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+
+  // Welcome Section
+  .welcome-section {
+    margin-bottom: 32px;
+    text-align: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    color: white;
+
+    .welcome-title {
+      color: white !important;
+      margin-bottom: 8px !important;
+      font-size: 28px !important;
+      font-weight: 700 !important;
+    }
+
+    .welcome-subtitle {
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-size: 16px;
+    }
+  }
+
+  // Statistics Section
+  .stats-section {
+    margin-bottom: 32px;
+
+    .stat-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: none;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      }
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      .ant-statistic-title {
+        font-weight: 600 !important;
+        color: #595959 !important;
+        margin-bottom: 8px !important;
+      }
+
+      .ant-statistic-content {
+        margin-bottom: 12px !important;
+      }
+
+      .stat-growth {
+        padding-top: 12px;
+        border-top: 1px solid #f0f0f0;
+        text-align: center;
+      }
+    }
+  }
+
+  // Content Section
+  .content-section {
+    margin-bottom: 32px;
+
+    .activity-card,
+    .performance-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: none;
+      height: 100%;
+
+      .ant-card-head {
+        border-bottom: 2px solid #f0f0f0;
+        background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
+
+        .ant-card-head-title {
+          font-weight: 600;
+          color: #262626;
+
+          .anticon {
+            margin-right: 8px;
+            color: #667eea;
+          }
+        }
+      }
+
+      .ant-list-item {
+        padding: 16px 0;
+        border-bottom: 1px solid #f5f5f5;
+        transition: background 0.3s ease;
+
+        &:hover {
+          background: #fafafa;
+          border-radius: 8px;
+          margin: 0 -12px;
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      .metric-item {
+        .metric-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 8px;
+        }
+
+        .ant-progress {
+          .ant-progress-bg {
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  // Actions Section
+  .actions-section {
+    .actions-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: none;
+
+      .ant-card-head {
+        border-bottom: 2px solid #f0f0f0;
+        background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
+
+        .ant-card-head-title {
+          font-weight: 600;
+          color: #262626;
+
+          .anticon {
+            margin-right: 8px;
+            color: #667eea;
+          }
+        }
+      }
+
+      .action-item {
+        text-align: center;
+        padding: 24px 16px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid #f0f0f0;
+
+        &:hover {
+          background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .action-icon {
+          font-size: 32px;
+          color: #667eea;
+          margin-bottom: 12px;
+          display: block;
+        }
+
+        .ant-typography {
+          color: #595959;
+          font-weight: 600;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .dashboard-overview {
+    padding: 16px;
+
+    .welcome-section {
+      padding: 16px;
+      margin-bottom: 24px;
+
+      .welcome-title {
+        font-size: 24px !important;
+      }
+
+      .welcome-subtitle {
+        font-size: 14px;
+      }
+    }
+
+    .stats-section,
+    .content-section,
+    .actions-section {
+      margin-bottom: 24px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-overview {
+    .welcome-section {
+      .welcome-title {
+        font-size: 20px !important;
+      }
+    }
+
+    .actions-section {
+      .action-item {
+        padding: 16px 12px;
+
+        .action-icon {
+          font-size: 24px;
+          margin-bottom: 8px;
+        }
+      }
+    }
+  }
+}
+
+// Animation Effects
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-overview {
+  animation: fadeInUp 0.6s ease-out;
+
+  .stat-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-delay: 0.1s;
+    animation-fill-mode: both;
+  }
+
+  .activity-card,
+  .performance-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-delay: 0.2s;
+    animation-fill-mode: both;
+  }
+
+  .actions-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-delay: 0.3s;
+    animation-fill-mode: both;
+  }
+}
+
+// Progress Bar Styling
+.ant-progress-line {
+  .ant-progress-bg {
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+  }
+}
+
+// Tag Styling
+.ant-tag {
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  border: none !important;
+}

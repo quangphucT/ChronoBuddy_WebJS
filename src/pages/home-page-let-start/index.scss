@@ -1,20 +1,19 @@
 .home-start-page {
   position: relative;
   min-height: 100vh;
-  background-image: url('../../assets/images/teamwordmain.jpeg');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px;
+  padding: 20px;
   overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-color: rgba(255, 255, 255, 0.6); // lớp phủ trắng mờ (có thể tăng giảm)
+    background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
     z-index: 0;
   }
 
@@ -23,62 +22,169 @@
     z-index: 1;
     max-width: 400px;
     width: 100%;
-    padding: 40px 24px;
+    padding: 40px 32px;
     text-align: center;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0.8); // thêm nền nhẹ để dễ đọc hơn
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 
-    .bee-image {
-      width: 120px;
+    @media (max-width: 480px) {
+      margin: 20px;
+      padding: 32px 24px;
+    }
+
+    .logo-section {
       margin-bottom: 24px;
-    }
 
-    .title {
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 16px;
-      color: #2c3e50;
-      letter-spacing: 0.5px;
-    }
+      .bee-image {
+        width: 60px;
+        height: auto;
+        margin-bottom: 12px;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      }
 
-    .subtitle {
-      font-size: 16px;
-      color: #555;
-      margin-bottom: 32px;
-      line-height: 1.5;
-    }
+      .logo-text {
+        h1 {
+          font-size: 24px;
+          font-weight: 800;
+          margin: 0 0 4px 0;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
 
-    .sign-up-btn {
-      background: linear-gradient(135deg, #5a2a82, #2a5298); // tím đậm -> xanh dương đậm
-      color: white;
-      border: none;
-      width: 100%;
-      font-weight: bold;
-      font-size: 16px;
-      border-radius: 8px;
-      margin-bottom: 16px;
-      height: 50px;
-      cursor: pointer;
-
-      &:hover {
-        opacity: 0.9;
+        span {
+          font-size: 12px;
+          color: #718096;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
       }
     }
 
-    .log-in-btn {
-      background: linear-gradient(135deg, #2a5298, #5a2a82); // xanh -> tím (ngược lại)
-      color: white;
-      border: none;
-      width: 100%;
-      font-weight: bold;
-      font-size: 16px;
-      border-radius: 8px;
-      height: 50px;
-      cursor: pointer;
+    .content-section {
+      margin-bottom: 32px;
 
-      &:hover {
-        opacity: 0.9;
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #2d3748;
+        line-height: 1.2;
+
+        @media (max-width: 480px) {
+          font-size: 24px;
+        }
+      }
+
+      .subtitle {
+        font-size: 15px;
+        color: #718096;
+        margin-bottom: 0;
+        line-height: 1.5;
+        font-weight: 400;
+      }
+    }
+
+    .auth-section {
+      .sign-up-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2) !important;
+        border: none !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        height: 48px !important;
+        font-size: 15px !important;
+        margin-bottom: 12px;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-1px) !important;
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+        }
+      }
+
+      .log-in-btn {
+        background: transparent !important;
+        border: 2px solid #e2e8f0 !important;
+        color: #4a5568 !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        height: 48px !important;
+        font-size: 15px !important;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: #667eea !important;
+          color: #667eea !important;
+          transform: translateY(-1px);
+        }
+      }
+
+      .divider {
+        position: relative;
+        margin: 20px 0 16px 0;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: #e2e8f0;
+        }
+
+        span {
+          background: rgba(255, 255, 255, 0.95);
+          padding: 0 12px;
+          font-size: 13px;
+          color: #a0aec0;
+          font-weight: 500;
+        }
+      }
+
+      .social-auth {
+        display: flex;
+        gap: 10px;
+
+        .social-btn {
+          flex: 1;
+          height: 44px !important;
+          border-radius: 10px !important;
+          font-weight: 500 !important;
+          font-size: 14px !important;
+          transition: all 0.3s ease;
+
+          &.google-btn {
+            background: #ffffff !important;
+            border: 2px solid #e2e8f0 !important;
+            color: #4285f4 !important;
+
+            &:hover {
+              border-color: #4285f4 !important;
+              transform: translateY(-1px);
+            }
+          }
+
+          &.github-btn {
+            background: #24292e !important;
+            border: 2px solid #24292e !important;
+            color: white !important;
+
+            &:hover {
+              background: #1a1e22 !important;
+              transform: translateY(-1px);
+            }
+          }
+        }
       }
     }
   }

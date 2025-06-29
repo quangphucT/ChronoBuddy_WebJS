@@ -23,6 +23,8 @@ import ManagexAdvancedPackage from "./pages/management-advancedPackage";
 import PageProListPage from "./pages/package-pro-list-pages";
 import MembersInWorkSpace from "./pages/member-in-workSpace";
 import TransactionHistory from "./pages/transaction-history";
+import OwnDashboard from "./pages/user/layout_dashboardOwn/user-dashboard";
+import ChatBox from "./pages/chatboxAI/chatbotform";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -30,6 +32,7 @@ const App = () => {
       path: "/home",
       element: <Layout />,
       children: [
+       
         {
           path: "",
           element: <HomePage />,
@@ -62,7 +65,10 @@ const App = () => {
         },
       ],
     },
-
+ {
+          path: "/chat-box",
+          element: <ChatBox/>
+        },
     {
       path: "/",
       element: (
@@ -117,6 +123,11 @@ const App = () => {
         },
       ],
     },
+    {
+      path: "/own-dashboard",
+      element: <OwnDashboard/>
+    }
+
   ]);
   return (
     <div>
