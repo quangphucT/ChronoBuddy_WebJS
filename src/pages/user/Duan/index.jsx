@@ -14,7 +14,6 @@ import { updateTask } from "../../../apis/task/updateTaskApi";
 import { editWorkSpace } from "../../../apis/editWorkspaceApi";
 import { addTaskToWS } from "../../../apis/task/addTaskToWSApi";
 import { generateTasksAI } from "../../../service/generateTasksAI";
-import { generateCustomTasksAI } from "../../../service/generateCustomTasksAI";
 dayjs.extend(relativeTime);
 
 // Component để hiển thị và chọn AI tasks
@@ -206,12 +205,6 @@ const Duan = () => {
   const [generatingTasks, setGeneratingTasks] = useState(false);
   const [aiGeneratedTasks, setAiGeneratedTasks] = useState([]);
   const [showAiTasksModal, setShowAiTasksModal] = useState(false);
-  
-  // Custom AI task generation states
-  const [customAiModalOpen, setCustomAiModalOpen] = useState(false);
-  const [customPrompt, setCustomPrompt] = useState('');
-  const [generatedCustomTasks, setGeneratedCustomTasks] = useState([]);
-  const [showCustomTasksModal, setShowCustomTasksModal] = useState(false);
   
   const fetchingData = async () => {
     setLoading(true);
@@ -582,91 +575,6 @@ const Duan = () => {
   const handleCloseAiTasksModal = () => {
     setShowAiTasksModal(false);
     setAiGeneratedTasks([]);
-  };
-
-  // Custom AI Task Generation functions
-  const handleOpenCustomAiModal = () => {
-    setCustomAiModalOpen(true);
-    setCustomPrompt('');
-  };
-
-  const handleCloseCustomAiModal = () => {
-    setCustomAiModalOpen(false);
-    setCustomPrompt('');
-  };
-
-  const handleGenerateCustomTasks = async () => {
-    if (!customPrompt.trim()) {
-      toast.error("Vui lòng nhập yêu cầu tạo task!");
-      return;
-    }
-
-    setGeneratingTasks(true);
-    try {
-      const aiTasks = await generateCustomTasksAI(selectedProject, customPrompt);
-      setGeneratedCustomTasks(aiTasks);
-      setShowCustomTasksModal(true);
-      setCustomAiModalOpen(false);
-      toast.success("AI đã tạo ra " + aiTasks.length + " nhiệm vụ theo yêu cầu của bạn!");
-    } catch (error) {
-      console.error("Error generating custom tasks with AI:", error);
-      toast.error(error.message || "Có lỗi xảy ra khi AI tạo tasks!");
-    }
-    setGeneratingTasks(false);
-  };
-
-  const handleAddCustomTasksToProject = async (selectedTasks) => {
-    if (!selectedProject || selectedTasks.length === 0) return;
-    
-    let addedCount = 0;
-    let failedCount = 0;
-    
-    for (const taskData of selectedTasks) {
-      try {
-        // Tạo dueDate (deadline) từ estimated days
-        const dueDate = dayjs().add(taskData.estimatedDays || 3, 'day').toISOString();
-        
-        const taskPayload = {
-          title: taskData.title,
-          description: taskData.description,
-          priority: taskData.priority || 'MEDIUM',
-          dueDate: dueDate,
-          status: 'PENDING'
-        };
-        
-        await addTaskToWS(taskPayload, selectedProject.id);
-        addedCount++;
-      } catch (error) {
-        console.error("Error adding custom task:", error);
-        failedCount++;
-      }
-    }
-    
-    if (addedCount > 0) {
-      toast.success(`✅ Đã thêm ${addedCount} nhiệm vụ tùy chỉnh vào dự án!`);
-      
-      // Refresh task list if detail modal is open
-      if (detailModalOpen && selectedProject) {
-        try {
-          const response = await getAllTaskByWorkSpaceId(selectedProject.id);
-          setProjectTasks(response.data.data);
-        } catch (error) {
-          console.error("Error refreshing tasks:", error);
-        }
-      }
-    }
-    
-    if (failedCount > 0) {
-      toast.error(`⚠️ Có ${failedCount} nhiệm vụ không thể thêm vào dự án.`);
-    }
-    
-    setShowCustomTasksModal(false);
-    setGeneratedCustomTasks([]);
-  };
-
-  const handleCloseCustomTasksModal = () => {
-    setShowCustomTasksModal(false);
-    setGeneratedCustomTasks([]);
   };
 
   // Helper function để clear storage (có thể dùng cho debug hoặc reset)
@@ -1592,13 +1500,6 @@ const Duan = () => {
                   🤖 AI tạo nhiệm vụ
                 </Button>
                 <Button 
-                  type="primary"
-                  className="bg-gradient-to-r from-orange-500 to-red-600 border-none"
-                  onClick={() => handleOpenCustomAiModal()}
-                >
-                  🎯 AI tùy chỉnh
-                </Button>
-                <Button 
                   type="default"
                   className="border-green-500 text-green-600 hover:bg-green-50"
                   onClick={() => setWorkSpaceId(selectedProject.id)}
@@ -2364,122 +2265,6 @@ const Duan = () => {
             <div className="text-center py-8">
               <Spin size="large" />
               <p className="mt-4 text-gray-500">AI đang phân tích và tạo nhiệm vụ...</p>
-            </div>
-          )}
-        </div>
-      </Modal>
-
-      {/* Custom AI Prompt Modal */}
-      <Modal
-        title={
-          <div className="flex items-center gap-3 p-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">🎯</span>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 m-0">
-                AI Tạo Task Tùy Chỉnh
-              </h3>
-              <p className="text-sm text-gray-500 m-0">
-                Yêu cầu AI tạo task theo ý muốn của bạn
-              </p>
-            </div>
-          </div>
-        }
-        open={customAiModalOpen}
-        onCancel={handleCloseCustomAiModal}
-        width={600}
-        footer={
-          <div className="flex justify-end gap-3">
-            <Button onClick={handleCloseCustomAiModal} size="large">
-              Hủy bỏ
-            </Button>
-            <Button 
-              type="primary"
-              size="large"
-              loading={generatingTasks}
-              onClick={handleGenerateCustomTasks}
-              className="bg-gradient-to-r from-orange-500 to-red-600 border-none"
-              disabled={!customPrompt.trim()}
-            >
-              {generatingTasks ? "🤖 AI đang tạo..." : "🎯 Tạo Task"}
-            </Button>
-          </div>
-        }
-        className="custom-ai-modal"
-      >
-        <div className="p-6 space-y-4">
-          <div className="bg-gradient-to-r from-orange-50 to-red-50 p-4 rounded-lg border border-orange-200">
-            <h4 className="text-md font-semibold text-gray-800 mb-2 flex items-center gap-2">
-              💡 Hướng dẫn sử dụng
-            </h4>
-            <div className="text-sm text-gray-600 space-y-1">
-              <p>• Mô tả cụ thể loại task bạn muốn AI tạo</p>
-              <p>• Có thể yêu cầu theo chủ đề, kỹ năng, hoặc giai đoạn cụ thể</p>
-              <p>• Ví dụ: "Tạo các task về security testing cho ứng dụng web"</p>
-              <p>• Hoặc: "Tạo tasks marketing cho sản phẩm mới ra mắt"</p>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              🎯 Yêu cầu tạo task:
-            </label>
-            <Input.TextArea
-              value={customPrompt}
-              onChange={(e) => setCustomPrompt(e.target.value)}
-              placeholder="Ví dụ: Tạo các task về kiểm thử bảo mật cho ứng dụng web, bao gồm penetration testing, vulnerability scanning..."
-              rows={4}
-              className="rounded-lg border-gray-300"
-              showCount
-              maxLength={500}
-            />
-          </div>
-
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h5 className="text-sm font-semibold text-blue-800 mb-2">📋 Thông tin dự án hiện tại:</h5>
-            <div className="text-sm text-blue-700">
-              <p><strong>Dự án:</strong> {selectedProject?.name}</p>
-              <p><strong>Mô tả:</strong> {selectedProject?.description}</p>
-            </div>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Custom AI Generated Tasks Modal */}
-      <Modal
-        title={
-          <div className="flex items-center gap-3 p-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">🎯</span>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 m-0">
-                Task Tùy Chỉnh Từ AI
-              </h3>
-              <p className="text-sm text-gray-500 m-0">
-                Chọn các task bạn muốn thêm vào dự án
-              </p>
-            </div>
-          </div>
-        }
-        open={showCustomTasksModal}
-        onCancel={handleCloseCustomTasksModal}
-        width={800}
-        footer={null}
-        className="custom-ai-tasks-modal"
-      >
-        <div className="p-6">
-          {generatedCustomTasks.length > 0 ? (
-            <AiTasksSelector 
-              tasks={generatedCustomTasks}
-              onAddTasks={handleAddCustomTasksToProject}
-              onCancel={handleCloseCustomTasksModal}
-            />
-          ) : (
-            <div className="text-center py-8">
-              <Spin size="large" />
-              <p className="mt-4 text-gray-500">AI đang tạo task theo yêu cầu của bạn...</p>
             </div>
           )}
         </div>

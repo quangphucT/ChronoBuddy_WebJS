@@ -39,32 +39,12 @@ const NhiemVu = () => {
   
   const getAllTaskOfUser = async() => {
     try {
-      console.log("=== FETCHING TASKS ===");
-      console.log("User ID:", user_id);
-      
       const response = await getAllTaskByUserId(user_id);
-      console.log("Tasks response:", response);
-      console.log("Tasks data:", response.data);
-      
-      if (response.status === 200 && response.data) {
-        setTasksOfUser(response.data.data || []);
-        console.log("Tasks updated successfully");
-      } else {
-        console.warn("Unexpected response format:", response);
-        setTasksOfUser([]);
-      }
+      setTasksOfUser(response.data.data);
+
     } catch (error) {
-      console.error("=== ERROR FETCHING TASKS ===");
-      console.error("Error object:", error);
-      console.error("Error response:", error?.response);
-      console.error("Error response data:", error?.response?.data);
-      
-      // Chỉ hiển thị toast error nếu là lỗi thật sự, không phải chỉ warning
-      if (error?.response?.status >= 400) {
-        toast.error(error?.response?.data?.message || "Không thể tải danh sách nhiệm vụ!");
-      }
-      
-      setTasksOfUser([]);
+      toast.error(error?.response?.data?.error || "Error while handling logic");
+      console.error("Error fetching tasks:", error);
     }
   }
  
@@ -97,45 +77,21 @@ const NhiemVu = () => {
       console.log("WorkSpace ID to send:", workSpaceId);
       
       // Gọi API để thêm task
-      const response = await addTaskToWS(payload, workSpaceId);
-      console.log("=== API RESPONSE ===");
-      console.log("Response status:", response.status);
-      console.log("Response data:", response.data);
+      await addTaskToWS(payload, workSpaceId);
       
-      // Kiểm tra response success
-      if (response.status === 200 || response.status === 201) {
-        toast.success("Thêm nhiệm vụ thành công!");
-        setOpenModalAddTask(false);
-        form.resetFields();
-        setSelectedWorkspace(null);
-        setSelectedDueDate(null);
-        setSelectedPriority("MEDIUM");
-        setSelectedStatus("PENDING");
-        
-        // Reload dữ liệu tasks sau khi thêm thành công
-        await getAllTaskOfUser();
-      } else {
-        throw new Error(`Unexpected response status: ${response.status}`);
-      }
+      toast.success("Thêm nhiệm vụ thành công!");
+      setOpenModalAddTask(false);
+      form.resetFields();
+      setSelectedWorkspace(null);
+      setSelectedDueDate(null);
+      setSelectedPriority("MEDIUM");
+      setSelectedStatus("PENDING");
+      
+      // Reload dữ liệu tasks sau khi thêm thành công
+      getAllTaskOfUser();
     } catch (error) {
-      console.error("=== ERROR IN HANDLEFINISH ===");
-      console.error("Error object:", error);
-      console.error("Error response:", error?.response);
-      console.error("Error response data:", error?.response?.data);
-      console.error("Error message:", error?.message);
-      
-      // Xử lý error message
-      let errorMessage = "Có lỗi xảy ra khi thêm nhiệm vụ!";
-      
-      if (error?.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error?.response?.data?.error) {
-        errorMessage = error.response.data.error;
-      } else if (error?.message) {
-        errorMessage = error.message;
-      }
-      
-      toast.error(errorMessage);
+      console.error("Error in handleFinish:", error);
+      toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi thêm nhiệm vụ!");
     }
     setLoading(false);
   };
@@ -155,7 +111,7 @@ const NhiemVu = () => {
             : task
         )
       );
-      
+
       const response = await deleteTask(taskId);
       console.log("Delete response:", response);
       
