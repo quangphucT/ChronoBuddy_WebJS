@@ -22,7 +22,7 @@ export * as getAllPackagePro from './getAllPackageProApi'
 export * as deletePackagePro from './deletePackageProApi'
 export * as paymentCreate from './paymentCreateApi'
 export * as saveDataToDB from './saveDataToDBApi'
-export * as addMember from './addMemberToWorkSpaceApi'
+export * as addMember from './WorkSpaceUser/addMemberToWorkSpaceApi'
 export * as getAllMemberOnWorkSpace from './getALLMemberOnWorkSpaceApi'
 
 export * as deleteMemberFromWorkSpaceApi from './deleteMemberFromWorkSpaceApi'
@@ -62,3 +62,6 @@ export * as getTop5TaskUnCompleted from './task/getTop5TaskUnCompleted'
 export * as getAllTaskByUserId from './task/getAllTaskOfUserApi'
 // add new work space by user id
 export * as addNewWorkSpaceByUserId from './WorkSpaceUser/addNewWorkSpaceApi'
+
+// assign task to user
+export * as assignTask from './task/assignTaskApi'

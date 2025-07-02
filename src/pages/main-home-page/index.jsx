@@ -26,7 +26,7 @@ import { editWorkSpace } from "../../apis/editWorkspaceApi";
 import { useNavigate } from "react-router-dom";
 import Carousel from "../../components/carousel";
 import AboutSection from "../../components/subTitleMainHome";
-import { addMemberApi } from "../../apis/addMemberToWorkSpaceApi";
+import { addMemberApi } from "../../apis/WorkSpaceUser/addMemberToWorkSpaceApi";
 import { addTaskToWS } from "../../apis/task/addTaskToWSApi";
 
 const HomePage = () => {

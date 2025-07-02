@@ -15,6 +15,9 @@ import { editWorkSpace } from "../../../apis/editWorkspaceApi";
 import { addTaskToWS } from "../../../apis/task/addTaskToWSApi";
 import { generateTasksAI } from "../../../service/generateTasksAI";
 import { generateCustomTasksAI } from "../../../service/generateCustomTasksAI";
+import { addMemberApi } from "../../../apis/WorkSpaceUser/addMemberToWorkSpaceApi";
+import { getAllUser } from "../../../apis/getAllUserApi";
+import { assignTask } from "../../../apis/task/assignTaskApi";
 dayjs.extend(relativeTime);
 
 // Component để hiển thị và chọn AI tasks
@@ -30,7 +33,7 @@ const AiTasksSelector = ({ tasks, onAddTasks, onCancel }) => {
       setSelectedTasks([]);
     }
   };
-
+  
   const handleSelectTask = (index, checked) => {
     if (checked) {
       setSelectedTasks([...selectedTasks, index]);
@@ -212,6 +215,19 @@ const Duan = () => {
   const [customPrompt, setCustomPrompt] = useState('');
   const [generatedCustomTasks, setGeneratedCustomTasks] = useState([]);
   const [showCustomTasksModal, setShowCustomTasksModal] = useState(false);
+  
+  // Add member modal states
+  const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
+  const [addMemberForm] = Form.useForm();
+  const [addingMember, setAddingMember] = useState(false);
+  const [allUsers, setAllUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+
+  // Assign task modal states
+  const [assignTaskModalOpen, setAssignTaskModalOpen] = useState(false);
+  const [assignTaskForm] = Form.useForm();
+  const [assigningTask, setAssigningTask] = useState(false);
+  const [selectedTaskToAssign, setSelectedTaskToAssign] = useState(null);
   
   const fetchingData = async () => {
     setLoading(true);
@@ -669,6 +685,108 @@ const Duan = () => {
     setGeneratedCustomTasks([]);
   };
 
+  // Add member modal functions
+  const fetchAllUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      const users = await getAllUser();
+      setAllUsers(users || []);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Không thể tải danh sách người dùng!");
+    }
+    setLoadingUsers(false);
+  };
+
+  const handleOpenAddMemberModal = () => {
+    setAddMemberModalOpen(true);
+    addMemberForm.resetFields();
+    fetchAllUsers(); // Load users when opening modal
+  };
+
+  const handleCloseAddMemberModal = () => {
+    setAddMemberModalOpen(false);
+    addMemberForm.resetFields();
+  };
+
+  const handleAddMember = async (values) => {
+    if (!workSpaceId) {
+      toast.error("Vui lòng chọn workspace trước!");
+      return;
+    }
+
+    setAddingMember(true);
+    try {
+      await addMemberApi(workSpaceId, { userId: values.userId });
+      toast.success("Thêm thành viên thành công!");
+      handleCloseAddMemberModal();
+      // Refresh member list
+      fetchingAllMembersInDuAn();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message?.error || "Lỗi khi thêm thành viên!"
+      );
+    }
+    setAddingMember(false);
+  };
+
+  // Assign task modal functions
+  const handleOpenAssignTaskModal = (task) => {
+    setSelectedTaskToAssign(task);
+    setAssignTaskModalOpen(true);
+    assignTaskForm.resetFields();
+    if (allUsers.length === 0) {
+      fetchAllUsers(); // Load users if not already loaded
+    }
+  };
+
+  const handleCloseAssignTaskModal = () => {
+    setAssignTaskModalOpen(false);
+    setSelectedTaskToAssign(null);
+    assignTaskForm.resetFields();
+  };
+
+  const handleAssignTask = async (values) => {
+    if (!selectedTaskToAssign) {
+      toast.error("Không có nhiệm vụ được chọn!");
+      return;
+    }
+
+    setAssigningTask(true);
+    try {
+      await assignTask(selectedTaskToAssign.id, values.userId);
+      toast.success("Gán nhiệm vụ thành công! 🎯");
+      handleCloseAssignTaskModal();
+      // Refresh task list
+      if (selectedProject) {
+        const response = await getAllTaskByWorkSpaceId(selectedProject.id);
+        setProjectTasks(response.data.data);
+      }
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Có lỗi xảy ra khi gán nhiệm vụ!"
+      );
+    }
+    setAssigningTask(false);
+  };
+
+  // Quick assign function for dropdown
+  const handleAssignTaskQuick = async (taskId, userId) => {
+    try {
+      await assignTask(taskId, userId);
+      toast.success("Gán nhiệm vụ thành công! 🎯");
+      // Refresh task list
+      if (selectedProject) {
+        const response = await getAllTaskByWorkSpaceId(selectedProject.id);
+        setProjectTasks(response.data.data);
+      }
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Có lỗi xảy ra khi gán nhiệm vụ!"
+      );
+    }
+  };
+
   // Helper function để clear storage (có thể dùng cho debug hoặc reset)
   const _clearTaskFilesStorage = (taskId) => {
     if (taskId) {
@@ -1097,9 +1215,9 @@ const Duan = () => {
                     className="text-sm text-blue-600 cursor-pointer hover:text-blue-800 transition-colors duration-200 flex items-center gap-2 font-medium"
                   >
                     👥 Thành viên trong dự án
-                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                    {/* <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
                       {members.length}
-                    </span>
+                    </span> */}
                   </p>
                 </div>
 
@@ -1178,6 +1296,7 @@ const Duan = () => {
               type="primary"
               icon={<PlusOutlined />}
               className="h-12 px-6 bg-gradient-to-r from-green-500 to-emerald-600 border-none rounded-lg hover:from-green-600 hover:to-emerald-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              onClick={handleOpenAddMemberModal}
             >
               <span className="font-semibold">+ Add Member</span>
             </Button>
@@ -1526,6 +1645,43 @@ const Duan = () => {
                                 onClick={() => handleEditTask(task)}
                               >
                                 ✏️
+                              </Button>
+                              <Dropdown
+                                menu={{
+                                  items: memberInDuAn.map(member => ({
+                                    key: member.userId,
+                                    label: (
+                                      <div className="flex items-center gap-2 py-1">
+                                        <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+                                          {member.userId.toString().slice(-2)}
+                                        </div>
+                                        <span>User ID: {member.userId}</span>
+                                        <span className="text-xs text-gray-500">({member.role})</span>
+                                      </div>
+                                    ),
+                                    onClick: () => handleAssignTaskQuick(task.id, member.userId)
+                                  }))
+                                }}
+                                trigger={['hover']}
+                                placement="bottomLeft"
+                              >
+                                <Button 
+                                  size="small" 
+                                  type="link" 
+                                  className="text-purple-600 hover:text-purple-800 p-1"
+                                  title="Gán nhanh cho thành viên workspace"
+                                >
+                                  👤
+                                </Button>
+                              </Dropdown>
+                              <Button 
+                                size="small" 
+                                type="link" 
+                                className="text-green-600 hover:text-green-800 p-1"
+                                title="Gán nhiệm vụ (chi tiết)"
+                                onClick={() => handleOpenAssignTaskModal(task)}
+                              >
+                                ⚙️
                               </Button>
                               <Button 
                                 size="small" 
@@ -2482,6 +2638,242 @@ const Duan = () => {
               <p className="mt-4 text-gray-500">AI đang tạo task theo yêu cầu của bạn...</p>
             </div>
           )}
+        </div>
+      </Modal>
+
+      {/* Add Member Modal */}
+      <Modal
+        title={
+          <div className="flex items-center gap-3 p-2">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">👥</span>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 m-0">Thêm thành viên</h3>
+              <p className="text-sm text-gray-500 m-0">Mời người dùng tham gia workspace</p>
+            </div>
+          </div>
+        }
+        open={addMemberModalOpen}
+        onCancel={handleCloseAddMemberModal}
+        footer={null}
+        width={500}
+        className="add-member-modal"
+      >
+        <div className="p-4">
+          <Form
+            form={addMemberForm}
+            onFinish={handleAddMember}
+            layout="vertical"
+            className="space-y-4"
+          >
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
+              <h5 className="text-sm font-semibold text-blue-800 mb-2">📋 Workspace hiện tại:</h5>
+              <div className="text-sm text-blue-700">
+                <p><strong>ID:</strong> {workSpaceId}</p>
+                <p><strong>Tên:</strong> {selectedProject?.name || 'Không xác định'}</p>
+              </div>
+            </div>
+
+            <Form.Item
+              label={
+                <span className="text-gray-700 font-medium">
+                  👤 Chọn người dùng
+                </span>
+              }
+              name="userId"
+              rules={[
+                { required: true, message: "Vui lòng chọn người dùng!" }
+              ]}
+            >
+              <Select
+                placeholder="Tìm kiếm và chọn người dùng..."
+                size="large"
+                className="w-full"
+                loading={loadingUsers}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={allUsers.map(user => ({
+                  value: user.id,
+                  label: `${user.username} (ID: ${user.id})${user.name ? ` - ${user.name}` : ''}`,
+                  user: user
+                }))}
+                optionRender={(option) => (
+                  <div className="flex items-center gap-3 py-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                      {option.data.user.username?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-800">
+                        {option.data.user.username}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        ID: {option.data.user.id}
+                        {option.data.user.name && ` • ${option.data.user.name}`}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              />
+            </Form.Item>
+
+            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+              <div className="flex items-start gap-2">
+                <span className="text-yellow-600">⚠️</span>
+                <div className="text-sm text-yellow-800">
+                  <p className="font-medium mb-1">Lưu ý:</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>Chọn người dùng từ danh sách có sẵn</li>
+                    <li>Người dùng phải đã đăng ký trong hệ thống</li>
+                    <li>Người dùng chưa là thành viên của workspace này</li>
+                    <li>Sử dụng tính năng tìm kiếm để tìm nhanh</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <Button 
+                onClick={handleCloseAddMemberModal}
+                size="large"
+              >
+                Hủy bỏ
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={addingMember}
+                size="large"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 border-none"
+              >
+                {addingMember ? "Đang thêm..." : "✅ Thêm thành viên"}
+              </Button>
+            </div>
+          </Form>
+        </div>
+      </Modal>
+
+      {/* Assign Task Modal */}
+      <Modal
+        title={
+          <div className="flex items-center gap-3 p-2">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">👤</span>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 m-0">Gán nhiệm vụ</h3>
+              <p className="text-sm text-gray-500 m-0">Phân công nhiệm vụ cho thành viên</p>
+            </div>
+          </div>
+        }
+        open={assignTaskModalOpen}
+        onCancel={handleCloseAssignTaskModal}
+        footer={null}
+        width={600}
+        className="assign-task-modal"
+      >
+        <div className="p-4">
+          <Form
+            form={assignTaskForm}
+            onFinish={handleAssignTask}
+            layout="vertical"
+            className="space-y-4"
+          >
+            {/* Task Information */}
+            <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-200 mb-4">
+              <h5 className="text-sm font-semibold text-indigo-800 mb-2">📋 Nhiệm vụ được chọn:</h5>
+              <div className="text-sm text-indigo-700">
+                <p><strong>Tiêu đề:</strong> {selectedTaskToAssign?.title}</p>
+                <p><strong>Mô tả:</strong> {selectedTaskToAssign?.description || 'Không có mô tả'}</p>
+                <p><strong>Hạn hoàn thành:</strong> {selectedTaskToAssign?.dueDate ? dayjs(selectedTaskToAssign.dueDate).format('DD/MM/YYYY HH:mm') : 'Chưa đặt'}</p>
+              </div>
+            </div>
+
+            {/* User Selection */}
+            <Form.Item
+              label={
+                <span className="text-gray-700 font-medium">
+                  👤 Chọn thành viên được gán
+                </span>
+              }
+              name="userId"
+              rules={[
+                { required: true, message: "Vui lòng chọn thành viên!" }
+              ]}
+            >
+              <Select
+                placeholder="Tìm kiếm và chọn thành viên..."
+                size="large"
+                className="w-full"
+                loading={loadingUsers}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={allUsers.map(user => ({
+                  value: user.id,
+                  label: `${user.username} (ID: ${user.id})${user.name ? ` - ${user.name}` : ''}`,
+                  user: user
+                }))}
+                optionRender={(option) => (
+                  <div className="flex items-center gap-3 py-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                      {option.data.user.username?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-800">
+                        {option.data.user.username}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        ID: {option.data.user.id}
+                        {option.data.user.name && ` • ${option.data.user.name}`}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              />
+            </Form.Item>
+
+            {/* Workspace Members Filter */}
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h5 className="text-sm font-semibold text-blue-800 mb-2">💡 Gợi ý:</h5>
+              <div className="text-sm text-blue-700">
+                <p>Nên chọn thành viên đã tham gia workspace này để đảm bảo quyền truy cập:</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {memberInDuAn.slice(0, 5).map((member) => (
+                    <span key={member.id} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                      User ID: {member.userId}
+                    </span>
+                  ))}
+                  {memberInDuAn.length > 5 && (
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                      +{memberInDuAn.length - 5} thành viên khác
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <Button 
+                onClick={handleCloseAssignTaskModal}
+                size="large"
+              >
+                Hủy bỏ
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={assigningTask}
+                size="large"
+                className="bg-gradient-to-r from-purple-500 to-indigo-600 border-none"
+              >
+                {assigningTask ? "Đang gán..." : "🎯 Gán nhiệm vụ"}
+              </Button>
+            </div>
+          </Form>
         </div>
       </Modal>
 
