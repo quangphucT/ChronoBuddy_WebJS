@@ -1,4 +1,4 @@
-import { Progress, Avatar, Dropdown, Button, Spin, Modal, Form, Input, Select, Upload, message, Divider, Tag, DatePicker, Checkbox, List, Card } from "antd";
+import { Progress, Avatar, Dropdown, Button, Spin, Modal, Form, Input, Select, Upload, message, Divider, Tag, DatePicker, Checkbox, List, Card, Popconfirm } from "antd";
 import { MoreOutlined, PlusOutlined, UploadOutlined, FileOutlined, DownloadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import { addTaskToWS } from "../../../apis/task/addTaskToWSApi";
 import { generateTasksAI } from "../../../service/generateTasksAI";
 import { generateCustomTasksAI } from "../../../service/generateCustomTasksAI";
 import { addMemberApi } from "../../../apis/WorkSpaceUser/addMemberToWorkSpaceApi";
+import { deleteMemberFromWorkSpaceApi } from "../../../apis/WorkSpaceUser/deleteMemberFromWorkSpaceApi";
 import { getAllUser } from "../../../apis/getAllUserApi";
 import { assignTask } from "../../../apis/task/assignTaskApi";
 dayjs.extend(relativeTime);
@@ -730,6 +731,25 @@ const Duan = () => {
     setAddingMember(false);
   };
 
+  // Remove member function
+  const handleRemoveMember = async (member) => {
+    if (!workSpaceId) {
+      toast.error("Vui lòng chọn workspace trước!");
+      return;
+    }
+
+    try {
+      await deleteMemberFromWorkSpaceApi(workSpaceId, member.userId);
+      toast.success("Xóa thành viên thành công!");
+      // Refresh member list
+      fetchingAllMembersInDuAn();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message?.error || "Lỗi khi xóa thành viên!"
+      );
+    }
+  };
+
   // Assign task modal functions
   const handleOpenAssignTaskModal = (task) => {
     setSelectedTaskToAssign(task);
@@ -1163,7 +1183,6 @@ const Duan = () => {
             };
             
             const statusColor = getStatusConfig(status);
-            const updated = dayjs(project.updatedAt).fromNow(); // ví dụ: "2 hours ago"
             const members = ["A", "B"]; // giả định
 
             return (
@@ -1261,7 +1280,7 @@ const Duan = () => {
                       ))}
                     </Avatar.Group>
                     <span className="text-xs text-gray-500 flex items-center gap-1">
-                      🕒 {updated}
+                      🕒 {project.createdAt}
                     </span>
                   </div>
                   
@@ -1345,12 +1364,26 @@ const Duan = () => {
                     </td>
                     <td className="p-4">
                       <div className="flex gap-2">
-                        <button className="text-blue-600 text-sm hover:text-blue-800 font-medium hover:underline transition-colors">
+                        {/* <button className="text-blue-600 text-sm hover:text-blue-800 font-medium hover:underline transition-colors">
                           ✏️ Edit
-                        </button>
-                        <button className="text-red-500 text-sm hover:text-red-700 font-medium hover:underline transition-colors">
-                          🗑️ Remove
-                        </button>
+                        </button> */}
+                        <Popconfirm
+                          title="Xác nhận xóa thành viên"
+                          description={`Bạn có chắc chắn muốn xóa thành viên "${mem.name || 'này'}" khỏi workspace?`}
+                          onConfirm={() => handleRemoveMember(mem)}
+                          okText="Xóa"
+                          cancelText="Hủy"
+                          okType="danger"
+                        >
+                          <Button 
+                            type="text" 
+                            danger 
+                            size="small"
+                            className="text-red-500 hover:text-red-700 font-medium transition-colors"
+                          >
+                            🗑️ Remove
+                          </Button>
+                        </Popconfirm>
                       </div>
                     </td>
                   </tr>
@@ -1360,7 +1393,7 @@ const Duan = () => {
           </div>
         </div>
       )}
-
+    
       {/* Add New Project Modal */}
       <Modal
         title={
@@ -1733,12 +1766,12 @@ const Duan = () => {
                 ⚡ Hành động nhanh
               </h4>
               <div className="flex flex-wrap gap-3">
-                <Button 
+                {/* <Button 
                   type="primary" 
                   className="bg-blue-500 border-blue-500"
                 >
                   ➕ Thêm nhiệm vụ mới
-                </Button>
+                </Button> */}
                 <Button 
                   type="primary"
                   className="bg-gradient-to-r from-purple-500 to-pink-600 border-none"
@@ -1754,14 +1787,14 @@ const Duan = () => {
                 >
                   🎯 AI tùy chỉnh
                 </Button>
-                <Button 
+                {/* <Button 
                   type="default"
                   className="border-green-500 text-green-600 hover:bg-green-50"
                   onClick={() => setWorkSpaceId(selectedProject.id)}
                 >
                   👥 Quản lý thành viên
-                </Button>
-                <Button 
+                </Button> */}
+                {/* <Button 
                   type="default"
                   className="border-purple-500 text-purple-600 hover:bg-purple-50"
                 >
@@ -1772,7 +1805,7 @@ const Duan = () => {
                   className="border-orange-500 text-orange-600 hover:bg-orange-50"
                 >
                   ⚙️ Cài đặt dự án
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -1799,13 +1832,13 @@ const Duan = () => {
             <Button onClick={handleCloseTaskDetailModal} size="large">
               Đóng
             </Button>
-            <Button 
+            {/* <Button 
               type="primary" 
               size="large"
               className="bg-gradient-to-r from-green-500 to-emerald-600 border-none"
             >
               ✏️ Chỉnh sửa nhiệm vụ
-            </Button>
+            </Button> */}
           </div>
         }
         width={800}
@@ -1910,34 +1943,6 @@ const Duan = () => {
                         <div className="flex items-center gap-3">
                           <div className="relative">
                             <span className="text-2xl">{getFileIcon(file.type)}</span>
-                            {/* Preview cho file ảnh */}
-                            {file.type?.includes('image') && file.url && (
-                              <div className="absolute -top-2 -right-2">
-                                <img 
-                                  src={file.url} 
-                                  alt={file.name}
-                                  className="w-6 h-6 rounded object-cover border border-gray-200"
-                                />
-                              </div>
-                            )}
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-800 flex items-center gap-2">
-                              {file.name}
-                              {/* Status indicator */}
-                              {file.isMock ? (
-                                <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                                  🔗 File demo
-                                </span>
-                              ) : (
-                                <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                                  ✓ Đã lưu
-                                </span>
-                              )}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              {file.size} • {file.isMock ? 'File mẫu' : `Tải lên ${dayjs(file.uploadedAt).format('DD/MM/YYYY HH:mm')}`}
-                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -2131,7 +2136,7 @@ const Duan = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-gray-50 p-6 rounded-xl">
+            {/* <div className="bg-gray-50 p-6 rounded-xl">
               <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                 ⚡ Hành động nhanh
               </h4>
@@ -2161,7 +2166,7 @@ const Duan = () => {
                   🔄 Thay đổi trạng thái
                 </Button>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </Modal>

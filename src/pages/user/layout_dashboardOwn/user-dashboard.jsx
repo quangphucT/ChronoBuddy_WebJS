@@ -39,7 +39,7 @@ const OwnDashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((store) => store?.user?.id);
-
+  const userInformation = useSelector((store) => store?.user);
   const handleCreate = async (values) => {
     setLoading(true);
     try {
@@ -135,8 +135,8 @@ const OwnDashboard = () => {
             style={{ width: "400px" }}
           />
           <div className="flex items-center gap-4">
-            <div className="text-white font-medium">Hthais Than</div>
-            <Avatar src="https://i.pravatar.cc/100" />
+            <div className="text-white font-medium">{userInformation?.username}</div>
+            {/* <Avatar src="https://i.pravatar.cc/100" /> */}
           </div>
         </Header>
 

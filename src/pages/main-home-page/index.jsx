@@ -20,7 +20,6 @@ import { getWorkSpaceUser } from "../../apis/getWorkSpaceUser";
 import dayjs from "dayjs";
 import { useForm } from "antd/es/form/Form";
 import { addWorkSpace } from "../../apis/addWorkspaceApi";
-import { deleteWorkSpace } from "../../apis/WorkSpaceUser/deleteWorkSpaceApi";
 import { editWorkSpace } from "../../apis/editWorkspaceApi";
 
 import { useNavigate } from "react-router-dom";
@@ -73,10 +72,10 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id]);
 
-  const handleAddTaskToWorkSpace = async (workSpaceId) => {
-    setWorkSpaceId(workSpaceId);
-    setOpenAddTaskModal(true);
-  };
+  // const handleAddTaskToWorkSpace = async (workSpaceId) => {
+  //   setWorkSpaceId(workSpaceId);
+  //   setOpenAddTaskModal(true);
+  // };
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -94,17 +93,17 @@ const HomePage = () => {
     setLoading(false);
   };
 
-  const handleDeleteWorkSpace = async (id) => {
-    setLoading(true);
-    try {
-      await deleteWorkSpace(id);
-      toast.success("Delete Sucess!");
-      fetchWorkspaceUser();
-    } catch (error) {
-      toast.error(error.response.data);
-    }
-    setLoading(false);
-  };
+  // const handleDeleteWorkSpace = async (id) => {
+  //   setLoading(true);
+  //   try {
+  //     await deleteWorkSpace(id);
+  //     toast.success("Delete Sucess!");
+  //     fetchWorkspaceUser();
+  //   } catch (error) {
+  //     toast.error(error.response.data);
+  //   }
+  //   setLoading(false);
+  // };
 
   const handleSubmitUpdate = async (values) => {
     setLoading(true);
@@ -142,9 +141,9 @@ const HomePage = () => {
     setLoading(false);
   };
 
-  const handleNavigateToTaskDetails = (workspaceId) => {
-    navigate(`tasks-details/${workspaceId}`);
-  };
+  // const handleNavigateToTaskDetails = (workspaceId) => {
+  //   navigate(`tasks-details/${workspaceId}`);
+  // };
 
   const handleSubmitAddMember = async (values) => {
     setLoading(true);
@@ -160,14 +159,14 @@ const HomePage = () => {
     setLoading(false);
   };
 
-  const handleOpenModalAddMemberToWorkSpace = (id) => {
-    setWorkSpaceId(id);
-    setOpenModalAddMember(true);
-  };
+  // const handleOpenModalAddMemberToWorkSpace = (id) => {
+  //   setWorkSpaceId(id);
+  //   setOpenModalAddMember(true);
+  // };
 
-  const handleNavigatePageMember = (id) => {
-    navigate(`MembersInWorkSpace/${id}`);
-  };
+  // const handleNavigatePageMember = (id) => {
+  //   navigate(`MembersInWorkSpace/${id}`);
+  // };
 
   return (
     <div className="homepage">
@@ -203,7 +202,7 @@ const HomePage = () => {
             </Col>
             <Col xs={24} lg={8} className="header-actions">
               <Button
-                onClick={() => setOpenModal(true)}
+                onClick={() => {navigate("/own-dashboard")}}
                 type="primary"
                 icon={<PlusOutlined />}
                 size="large"
@@ -314,31 +313,31 @@ const HomePage = () => {
                       <span className="workspace-name">{workspace.name}</span>
                     </div>
                   }
-                  extra={
-                    <div className="workspace-actions">
-                      <Button
-                        size="small"
-                        type="text"
-                        onClick={() => {
-                          setOpenModalUpdate(true);
-                          formUpdate.setFieldsValue(workspace);
-                        }}
-                      >
-                        ✏️
-                      </Button>
-                      <Popconfirm
-                        title="Delete workspace?"
-                        description="This action cannot be undone"
-                        onConfirm={() => handleDeleteWorkSpace(workspace.id)}
-                        okText="Delete"
-                        cancelText="Cancel"
-                      >
-                        <Button size="small" type="text" danger>
-                          🗑️
-                        </Button>
-                      </Popconfirm>
-                    </div>
-                  }
+                  // extra={
+                  //   // <div className="workspace-actions">
+                  //   //   <Button
+                  //   //     size="small"
+                  //   //     type="text"
+                  //   //     onClick={() => {
+                  //   //       setOpenModalUpdate(true);
+                  //   //       formUpdate.setFieldsValue(workspace);
+                  //   //     }}
+                  //   //   >
+                  //   //     ✏️
+                  //   //   </Button>
+                  //   //   <Popconfirm
+                  //   //     title="Delete workspace?"
+                  //   //     description="This action cannot be undone"
+                  //   //     onConfirm={() => handleDeleteWorkSpace(workspace.id)}
+                  //   //     okText="Delete"
+                  //   //     cancelText="Cancel"
+                  //   //   >
+                  //   //     <Button size="small" type="text" danger>
+                  //   //       🗑️
+                  //   //     </Button>
+                  //   //   </Popconfirm>
+                  //   // </div>
+                  // }
                 >
                   <div className="workspace-content">
                     <div className="workspace-meta">
@@ -347,7 +346,7 @@ const HomePage = () => {
                       </span>
                     </div>
                     
-                    <div className="workspace-actions-grid">
+                    {/* <div className="workspace-actions-grid">
                       <Button
                         className="action-btn primary"
                         icon="➕"
@@ -379,7 +378,7 @@ const HomePage = () => {
                       >
                         Add Member
                       </Button>
-                    </div>
+                    </div> */}
                   </div>
                 </Card>
               </Col>

@@ -27,7 +27,7 @@ const LoginPage = () => {
       if (role === 'FREE' || role === 'PREMIUM') {
         navigate("/home")
       } else if (role === 'ADMIN') {
-        navigate("/dashboard")
+        navigate("/dashboard/statistic")
       }
       dispatch(saveInformation(dataUser))
       console.log("dataUser:", dataUser)

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  DesktopOutlined,
   PieChartOutlined,
   UserOutlined,
   DeleteOutlined,
@@ -12,8 +11,10 @@ import {
   LogoutOutlined,
   DashboardOutlined
 } from "@ant-design/icons";
-import { Layout, Menu, Button, Avatar, Badge, Dropdown, Space, Typography } from "antd";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Layout, Menu, Button, Badge, Space, Typography, message } from "antd";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { removeInformation } from "../../../redux/feature/userSlice";
 import "./index.scss";
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -27,39 +28,98 @@ function getItem(label, key, icon, children) {
   };
 }
 
-const items = [
-  getItem("Dashboard", "overview", <DashboardOutlined />),
-  getItem("Statistics", "statistic", <PieChartOutlined />),
-  getItem("User Management", "user-management", <UserOutlined />),
-  getItem("User Delete Management", "user-delete-management", <DeleteOutlined />),
-  getItem("PackagePro Management", "manage-advancedPackage", <CrownOutlined />),
-];
+function getLogoutItem(label, key, icon, onClick) {
+  return {
+    key,
+    icon,
+    label: (
+      <div onClick={onClick} style={{ cursor: 'pointer' }}>
+        {label}
+      </div>
+    ),
+    danger: true,
+  };
+}
+
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const user = useSelector((state) => state.user);
 
-  // User dropdown menu
-  const userMenuItems = [
-    {
-      key: 'profile',
-      icon: <UserOutlined />,
-      label: 'Profile Settings',
-    },
-    {
-      key: 'settings',
-      icon: <SettingOutlined />,
-      label: 'Preferences',
-    },
+  // Logout functionality
+  const handleLogout = () => {
+    try {
+      // Clear user info from Redux
+      dispatch(removeInformation());
+      
+      // Clear any stored tokens or session data from localStorage
+      localStorage.removeItem('token');
+
+      
+      // Show success message
+      message.success('Đăng xuất thành công!');
+      
+      // Redirect to login page
+      navigate('/login-page', { replace: true });
+    } catch (error) {
+      console.error('Logout error:', error);
+      message.error('Lỗi khi đăng xuất. Vui lòng thử lại.');
+    }
+  };
+
+  // Handle user dropdown menu clicks
+  // const handleMenuClick = ({ key }) => {
+  //   switch (key) {
+  //     case 'profile':
+  //       message.info('Cài đặt hồ sơ sẽ sớm có!');
+  //       break;
+  //     case 'settings':
+  //       message.info('Tùy chọn sẽ sớm có!');
+  //       break;
+  //     case 'logout':
+  //       handleLogout();
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
+
+  // Menu items including logout
+  const items = [
+    getItem("Statistics", "statistic", <PieChartOutlined />),
+    getItem("User Management", "user-management", <UserOutlined />),
+    getItem("User Delete Management", "user-delete-management", <DeleteOutlined />),
+    getItem("PackagePro Management", "manage-advancedPackage", <CrownOutlined />),
     {
       type: 'divider',
     },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: 'Logout',
-      danger: true,
-    },
+    getLogoutItem("Đăng xuất", "logout", <LogoutOutlined />, handleLogout),
   ];
+
+  // User dropdown menu
+  // const userMenuItems = [
+  //   {
+  //     key: 'profile',
+  //     icon: <UserOutlined />,
+  //     label: 'Cài đặt hồ sơ',
+  //   },
+  //   {
+  //     key: 'settings',
+  //     icon: <SettingOutlined />,
+  //     label: 'Tùy chọn',
+  //   },
+  //   {
+  //     type: 'divider',
+  //   },
+  //   {
+  //     key: 'logout',
+  //     icon: <LogoutOutlined />,
+  //     label: 'Đăng xuất',
+  //     danger: true,
+  //   },
+  // ];
 
   const getCurrentPageTitle = () => {
     const path = location.pathname;
@@ -99,6 +159,11 @@ const App = () => {
           mode="inline"
           items={items}
           className="dashboard-menu"
+          onClick={({ key }) => {
+            if (key === 'logout') {
+              handleLogout();
+            }
+          }}
         />
 
         {/* Collapse Info */}
@@ -146,8 +211,11 @@ const App = () => {
               />
 
               {/* User Profile */}
-              <Dropdown
-                menu={{ items: userMenuItems }}
+              {/* <Dropdown
+                menu={{ 
+                  items: userMenuItems,
+                  onClick: handleMenuClick
+                }}
                 placement="bottomRight"
                 trigger={['click']}
               >
@@ -159,12 +227,14 @@ const App = () => {
                   />
                   {!collapsed && (
                     <div className="user-info">
-                      <Text strong>Admin User</Text>
-                      <Text type="secondary" className="user-role">Administrator</Text>
+                      <Text strong>{user?.name || 'Admin User'}</Text>
+                      <Text type="secondary" className="user-role">
+                        {user?.role || 'Administrator'}
+                      </Text>
                     </div>
                   )}
                 </div>
-              </Dropdown>
+              </Dropdown> */}
             </Space>
           </div>
         </Header>

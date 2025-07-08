@@ -11,7 +11,8 @@ import {
   CrownOutlined,
   HistoryOutlined
 } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeInformation } from "../../redux/feature/userSlice";
 
 const Header = () => {
   const location = useLocation();
@@ -21,7 +22,7 @@ const Header = () => {
   const imageUrlAfterLogin = useSelector((store) => store?.user?.imageUrl);
   const nameOnRedux = useSelector((store) => store?.user?.username);
   const isHomePage = location.pathname === "/home";
-  
+  const dispatch = useDispatch();
  // userInformation on Redux
    const userInformation = useSelector((store) => store?.user);
 
@@ -71,9 +72,15 @@ const Header = () => {
       icon: <LogoutOutlined />,
       label: 'Logout',
       danger: true,
+       onClick: () => {handleNavigateLogin()},
     },
   ];
-
+  const handleNavigateLogin = () => {
+    
+   dispatch(removeInformation());
+   localStorage.removeItem("token");
+   navigate("/login-page");
+  }
   const headerClasses =
     isHomePage && !scrolled
       ? "header-transparent"
