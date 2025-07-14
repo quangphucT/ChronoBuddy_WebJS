@@ -20,12 +20,12 @@ const HomePageIntro = () => {
                   <span>Project Planning</span>
                 </div>
               </div>
-              <div className="floating-card card-2">
+              {/* <div className="floating-card card-2">
                 <div className="task-item">
                   <span className="status in-progress"></span>
                   <span>Team Meeting</span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -68,15 +68,15 @@ const HomePageIntro = () => {
               >
                 Get Started Free
               </Button>
-              <Button 
+              {/* <Button 
                 size="large"
                 className="demo-btn"
                 icon={<PlayCircleOutlined />}
               >
                 Watch Demo
-              </Button>
+              </Button> */}
             </div>
-            <div className="stats">
+            {/* <div className="stats">
               <div className="stat-item">
                 <span className="stat-number">50K+</span>
                 <span className="stat-label">Active Users</span>
@@ -89,7 +89,7 @@ const HomePageIntro = () => {
                 <span className="stat-number">24/7</span>
                 <span className="stat-label">Support</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

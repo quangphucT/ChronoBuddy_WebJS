@@ -47,7 +47,7 @@ const HomePageLetStart = () => {
             Sign In
           </Button>
 
-          <div className="divider">
+          {/* <div className="divider">
             <span>or continue with</span>
           </div>
 
@@ -66,7 +66,7 @@ const HomePageLetStart = () => {
             >
               GitHub
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -195,20 +195,20 @@ const App = () => {
           <div className="header-right">
             <Space size="middle">
               {/* Notifications */}
-              <Badge count={5} size="small">
+              {/* <Badge count={5} size="small">
                 <Button
                   type="text"
                   icon={<BellOutlined />}
                   className="header-btn"
                 />
-              </Badge>
+              </Badge> */}
 
               {/* Settings */}
-              <Button
+              {/* <Button
                 type="text"
                 icon={<SettingOutlined />}
                 className="header-btn"
-              />
+              /> */}
 
               {/* User Profile */}
               {/* <Dropdown
