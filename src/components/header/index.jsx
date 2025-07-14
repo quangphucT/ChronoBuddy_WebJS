@@ -62,11 +62,11 @@ const Header = () => {
     {
       type: 'divider',
     },
-    {
-      key: 'settings',
-      icon: <SettingOutlined />,
-      label: 'Settings',
-    },
+    // {
+    //   key: 'settings',
+    //   icon: <SettingOutlined />,
+    //   label: 'Settings',
+    // },
     {
       key: 'logout',
       icon: <LogoutOutlined />,
@@ -133,13 +133,13 @@ const Header = () => {
           {/* User Section */}
           <div className="user-section">
             {/* Notifications */}
-            <Badge count={3} size="small">
+            {/* <Badge count={3} size="small">
               <Button
                 type="text"
                 icon={<BellOutlined />}
                 className="notification-btn"
               />
-            </Badge>
+            </Badge> */}
 
             {/* User Profile */}
             {userInformation ? (

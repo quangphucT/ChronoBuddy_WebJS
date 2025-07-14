@@ -37,9 +37,9 @@ export default function Carousel() {
                 complete your daily goals effortlessly. Stay focused and
                 organized – all in one place.
               </p>
-              <button className="mt-6 cursor-pointer bg-[#1e88e5] hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md transition-all duration-300">
+              {/* <button className="mt-6 cursor-pointer bg-[#1e88e5] hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md transition-all duration-300">
                 Get Started
-              </button>
+              </button> */}
             </div>
           </div>
         </SwiperSlide>

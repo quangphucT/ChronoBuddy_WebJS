@@ -91,9 +91,9 @@ const OwnDashboard = () => {
           <Menu.Item key="projects" icon={<ProjectOutlined />}>
             Dự án của tôi
           </Menu.Item>
-          <Menu.Item key="settings" icon={<SettingOutlined />}>
+          {/* <Menu.Item key="settings" icon={<SettingOutlined />}>
             Cài đặt
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item key="home" icon={<SettingOutlined />}>
             Main Screen
           </Menu.Item>
@@ -101,7 +101,7 @@ const OwnDashboard = () => {
             Todo Assistant
           </Menu.Item>
         </Menu>
-        <Button
+        {/* <Button
           onClick={() => {
             setOpenModal(true);
           }}
@@ -114,7 +114,7 @@ const OwnDashboard = () => {
           }}
         >
           Dự án của tôi +
-        </Button>
+        </Button> */}
       </Sider>
 
       {/* Main content */}
@@ -130,10 +130,10 @@ const OwnDashboard = () => {
             height: "90px",
           }}
         >
-          <Input.Search
+          {/* <Input.Search
             placeholder="Tìm kiếm dự án hoặc nhiệm vụ..."
             style={{ width: "400px" }}
-          />
+          /> */}
           <div className="flex items-center gap-4">
             <div className="text-white font-medium">{userInformation?.username}</div>
             {/* <Avatar src="https://i.pravatar.cc/100" /> */}

@@ -458,13 +458,13 @@ const StatisticOwn = ({ onNavigateToProjects }) => {
             <MoreOutlined className="more-icon" />
           </div>
           <div className="user-activity">
-            <div className="user-info">
+            {/* <div className="user-info">
               <Avatar icon={<UserOutlined />} />
               <Text strong>Htahis Thân</Text>
-            </div>
-            <Button type="link" className="view-all-btn">
+            </div> */}
+            {/* <Button type="link" className="view-all-btn">
               Xem tất cả
-            </Button>
+            </Button> */}
           </div>
           <div className="activity-files">
             {recentFiles.length > 0 ? (

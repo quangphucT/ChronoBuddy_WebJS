@@ -216,7 +216,7 @@ const HomePage = () => {
       </div>
 
       {/* Task Summary Cards */}
-      <div className="dashboard-overview">
+      {/* <div className="dashboard-overview">
         <div className="section-header">
           <h2>📊 Today's Overview</h2>
           <p>Track your progress and stay organized</p>
@@ -273,7 +273,7 @@ const HomePage = () => {
             </Card>
           </Col>
         </Row>
-      </div>
+      </div> */}
 
       {/* Workspaces Section */}
       <div className="workspaces-section">
