@@ -4,6 +4,7 @@ import "./index.scss";
 import Chatform from "../chatform";
 import { generateBotResponse } from "../../../service/generateBotResponse";
 import mammoth from "mammoth";
+import { Image } from "antd";
 
 const ChatBox = () => {
   const bottomRef = useRef(null); 
@@ -130,9 +131,9 @@ const ChatBox = () => {
         <div className="chat-header">
           <div className="header-content">
             <div className="chatbot-icon">
-              <ChatbotIcon />
+             <Image preview={false} src={"https://cdn-icons-png.flaticon.com/512/2556/2556832.png"} alt="Chatbot Icon" />
             </div>
-            <h2 className="header-title">Todo Assistant</h2>
+            <h2 className="header-title">Beezy</h2>
             <div className="status-indicator"></div>
           </div>
           <div className="header-actions">

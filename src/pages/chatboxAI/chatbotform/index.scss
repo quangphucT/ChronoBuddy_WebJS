@@ -124,8 +124,8 @@ $shadow-heavy: 0 16px 64px rgba(31, 38, 135, 0.3);
     z-index: 1;
 
     .chatbot-icon {
-      width: 32px;
-      height: 32px;
+      width: 42px;
+      height: 42px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: 50%;
       display: flex;
@@ -133,16 +133,17 @@ $shadow-heavy: 0 16px 64px rgba(31, 38, 135, 0.3);
       justify-content: center;
       animation: pulse 2s infinite;
 
-      &::before {
-        content: '🤖';
-        font-size: 1rem;
-      }
+      // &::before {
+      //   content: '🤖';
+      //   font-size: 1rem;
+      // }
     }
 
     .header-title {
       font-weight: 600;
       font-size: 1.125rem;
       letter-spacing: -0.025em;
+      color: #000 !important;
     }
 
     .status-indicator {
