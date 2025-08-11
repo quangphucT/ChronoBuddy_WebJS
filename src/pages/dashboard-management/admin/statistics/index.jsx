@@ -5,6 +5,8 @@ import { getPaymentYear } from '../../../../apis/getPaymentYearApi';
 import { getPaymentMonth } from '../../../../apis/getPaymentMonthApi';
 import { getRevenueEachPackageYear } from '../../../../apis/getRevenueEachPackageYearApi';
 import { getRevenueEachPackageMonth } from '../../../../apis/getRevenueEachPackageMonthApi';
+import { getVisitorAnalytics, exportVisitorData, clearVisitorData } from '../../../../utils/visitorAnalytics';
+import usePageTracker from '../../../../hooks/usePageTracker';
 import { 
   Button, 
   Card, 
@@ -17,35 +19,49 @@ import {
   Space,
   Typography,
   Divider,
-  DatePicker
+  DatePicker,
+  Table,
+  Progress,
+  Tag
 } from 'antd';
 import { 
   BarChartOutlined, 
   CalendarOutlined, 
   DollarOutlined,
-  // TrendingUpOutlined,
   SearchOutlined,
   ReloadOutlined,
-  LineChartOutlined
+  LineChartOutlined,
+  EyeOutlined,
+  UserOutlined,
+  GlobalOutlined,
+  MobileOutlined,
+  DesktopOutlined,
+  DownloadOutlined,
+  DeleteOutlined
 } from '@ant-design/icons';
-import dayjs from 'dayjs';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
 
 const StatisticsManagement = () => {
+  // Enable page tracking
+  usePageTracker();
+  
   const yearList = [2022, 2023, 2024, 2025];
 
+  // Revenue states
   const [totalPaymentYear, setTotalPaymentYear] = useState(null);
   const [totalPaymentMonth, setTotalPaymentMonth] = useState(null);
   const [totalRevenueEachPackageYear, setTotalRevenueEachPackageYear] = useState(null);
   const [totalRevenueEachPackageMonth, setTotalRevenueEachPackageMonth] = useState(null);
 
+  // Loading states
   const [loadingYear, setLoadingYear] = useState(false);
   const [loadingMonth, setLoadingMonth] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingMonthRevenue, setLoadingMonthRevenue] = useState(false);
 
+  // Revenue filter states
   const [year, setYear] = useState(new Date().getFullYear());
   const [yearAndMonth, setYearAndMonth] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(null);
@@ -56,6 +72,35 @@ const StatisticsManagement = () => {
   const [subcriptionPlansIdMonth, setSubcriptionPlansIdMonth] = useState('');
   const [monthSubcriptionPlans, setMonthSubcriptionPlans] = useState(null);
   const [yearSubcriptionPlansMonth, setYearSubcriptionPlansMonth] = useState(null);
+
+  // Visitor analytics states
+  const [visitorAnalytics, setVisitorAnalytics] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Refresh visitor analytics
+  const refreshVisitorAnalytics = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      const analytics = getVisitorAnalytics();
+      setVisitorAnalytics(analytics);
+      setRefreshing(false);
+    }, 500);
+  };
+
+  // Export visitor data
+  const handleExportVisitorData = () => {
+    exportVisitorData();
+    toast.success('Visitor data exported successfully!');
+  };
+
+  // Clear visitor data
+  const handleClearVisitorData = () => {
+    if (window.confirm('Are you sure you want to clear all visitor data? This action cannot be undone.')) {
+      clearVisitorData();
+      refreshVisitorAnalytics();
+      toast.success('Visitor data cleared successfully!');
+    }
+  };
 
   // Năm - Tổng thanh toán
   const fetchPaymentYear = async () => {
@@ -128,6 +173,10 @@ const StatisticsManagement = () => {
     fetchPaymentMonth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yearAndMonth, month]);
+
+  useEffect(() => {
+    refreshVisitorAnalytics();
+  }, []);
 
   return (
     <div className="statistics-dashboard">
@@ -211,6 +260,208 @@ const StatisticsManagement = () => {
             <div className="stat-meta">
               <Text type="secondary">Plan ID: {subcriptionPlansIdMonth || "N/A"}</Text>
             </div>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Visitor Analytics Section */}
+      <Divider orientation="left" style={{ fontSize: '18px', fontWeight: 'bold', margin: '40px 0 20px' }}>
+        <EyeOutlined style={{ marginRight: 8 }} />
+        Website Traffic Analytics
+      </Divider>
+
+      {/* Visitor Overview Cards */}
+      <Row gutter={[24, 24]} className="visitor-overview-section">
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card visitor-today-card">
+            <Statistic
+              title="Today's Page Views"
+              value={visitorAnalytics?.todayPageViews || 0}
+              loading={refreshing}
+              prefix={<EyeOutlined />}
+              valueStyle={{ color: '#13c2c2', fontSize: '24px' }}
+            />
+            <div className="stat-meta">
+              <Text type="secondary">Unique: {visitorAnalytics?.todayUniqueVisitors || 0}</Text>
+            </div>
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card visitor-week-card">
+            <Statistic
+              title="This Week"
+              value={visitorAnalytics?.weekPageViews || 0}
+              loading={refreshing}
+              prefix={<CalendarOutlined />}
+              valueStyle={{ color: '#52c41a', fontSize: '24px' }}
+            />
+            <div className="stat-meta">
+              <Text type="secondary">Unique: {visitorAnalytics?.weekUniqueVisitors || 0}</Text>
+            </div>
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card visitor-month-card">
+            <Statistic
+              title="This Month"
+              value={visitorAnalytics?.monthPageViews || 0}
+              loading={refreshing}
+              prefix={<UserOutlined />}
+              valueStyle={{ color: '#1890ff', fontSize: '24px' }}
+            />
+            <div className="stat-meta">
+              <Text type="secondary">Unique: {visitorAnalytics?.monthUniqueVisitors || 0}</Text>
+            </div>
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card visitor-total-card">
+            <Statistic
+              title="Total Page Views"
+              value={visitorAnalytics?.totalPageViews || 0}
+              loading={refreshing}
+              prefix={<GlobalOutlined />}
+              valueStyle={{ color: '#722ed1', fontSize: '24px' }}
+            />
+            <div className="stat-meta">
+              <Text type="secondary">All time visitors</Text>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Visitor Analytics Details */}
+      <Row gutter={[24, 24]} className="visitor-details-section" style={{ marginTop: 24 }}>
+        {/* Most Visited Pages */}
+        <Col xs={24} lg={8}>
+          <Card 
+            title={
+              <Space>
+                {/* <TrendingUpOutlined /> */}
+                <span>Top Pages</span>
+              </Space>
+            }
+            className="visitor-card"
+            extra={
+              <Button 
+                icon={<ReloadOutlined />} 
+                onClick={refreshVisitorAnalytics}
+                loading={refreshing}
+                type="text"
+              />
+            }
+          >
+            <div className="page-list">
+              {visitorAnalytics?.pageViewsBreakdown?.slice(0, 8).map((page) => (
+                <div key={page.path} className="page-item">
+                  <div className="page-info">
+                    <Text strong className="page-path">{page.path || '/'}</Text>
+                    <Text type="secondary" className="page-count">{page.count} views</Text>
+                  </div>
+                  <Progress 
+                    percent={Math.round((page.count / (visitorAnalytics?.pageViewsBreakdown?.[0]?.count || 1)) * 100)} 
+                    size="small" 
+                    showInfo={false}
+                    strokeColor="#1890ff"
+                  />
+                </div>
+              )) || []}
+            </div>
+          </Card>
+        </Col>
+
+        {/* Browser & Device Stats */}
+        <Col xs={24} lg={8}>
+          <Card 
+            title={
+              <Space>
+                <DesktopOutlined />
+                <span>Browser & Device</span>
+              </Space>
+            }
+            className="visitor-card"
+          >
+            <div className="browser-device-stats">
+              <div className="stat-section">
+                <Text strong>Browsers:</Text>
+                <div className="stat-items">
+                  {visitorAnalytics?.browserStats?.browsers?.map((browser) => (
+                    <div key={browser.name} className="stat-item">
+                      <Tag color="blue">{browser.name}</Tag>
+                      <span>{browser.count}</span>
+                    </div>
+                  )) || []}
+                </div>
+              </div>
+              
+              <Divider style={{ margin: '16px 0' }} />
+              
+              <div className="stat-section">
+                <Text strong>Devices:</Text>
+                <div className="stat-items">
+                  {visitorAnalytics?.browserStats?.devices?.map((device) => (
+                    <div key={device.name} className="stat-item">
+                      <Tag color={device.name === 'Mobile' ? 'green' : device.name === 'Tablet' ? 'orange' : 'purple'}>
+                        {device.name === 'Mobile' ? <MobileOutlined /> : <DesktopOutlined />}
+                        {device.name}
+                      </Tag>
+                      <span>{device.count}</span>
+                    </div>
+                  )) || []}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </Col>
+
+        {/* Visitor Actions */}
+        <Col xs={24} lg={8}>
+          <Card 
+            title={
+              <Space>
+                <BarChartOutlined />
+                <span>Analytics Actions</span>
+              </Space>
+            }
+            className="visitor-card"
+          >
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Button 
+                type="primary" 
+                icon={<ReloadOutlined />}
+                onClick={refreshVisitorAnalytics}
+                loading={refreshing}
+                style={{ width: '100%' }}
+              >
+                Refresh Analytics
+              </Button>
+              
+              <Button 
+                icon={<DownloadOutlined />}
+                onClick={handleExportVisitorData}
+                style={{ width: '100%' }}
+              >
+                Export Data
+              </Button>
+              
+              <Button 
+                danger
+                icon={<DeleteOutlined />}
+                onClick={handleClearVisitorData}
+                style={{ width: '100%' }}
+              >
+                Clear All Data
+              </Button>
+              
+              <div className="analytics-summary">
+                <Text type="secondary" style={{ fontSize: '12px' }}>
+                  Last updated: {new Date().toLocaleTimeString()}
+                </Text>
+              </div>
+            </Space>
           </Card>
         </Col>
       </Row>

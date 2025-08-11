@@ -300,3 +300,187 @@
     color: white !important;
   }
 }
+
+// Visitor Analytics Styling
+.visitor-overview-section {
+  margin-bottom: 24px;
+
+  .visitor-today-card {
+    &::before {
+      background: linear-gradient(135deg, #13c2c2, #36cfc9);
+    }
+  }
+
+  .visitor-week-card {
+    &::before {
+      background: linear-gradient(135deg, #52c41a, #73d13d);
+    }
+  }
+
+  .visitor-month-card {
+    &::before {
+      background: linear-gradient(135deg, #1890ff, #40a9ff);
+    }
+  }
+
+  .visitor-total-card {
+    &::before {
+      background: linear-gradient(135deg, #722ed1, #9254de);
+    }
+  }
+}
+
+.visitor-details-section {
+  .visitor-card {
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: none;
+    background: white;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .ant-card-head {
+      border-bottom: 1px solid #f0f0f0;
+      border-radius: 16px 16px 0 0;
+
+      .ant-card-head-title {
+        font-weight: 600;
+        color: #262626;
+      }
+    }
+
+    .ant-card-body {
+      padding: 24px;
+    }
+  }
+
+  // Top Pages Styling
+  .page-list {
+    .page-item {
+      margin-bottom: 16px;
+      padding: 12px;
+      background: #fafafa;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #f0f8ff;
+        transform: translateX(4px);
+      }
+
+      .page-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .page-path {
+          font-size: 14px;
+          color: #262626;
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          max-width: 200px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .page-count {
+          font-size: 12px;
+          color: #8c8c8c;
+          font-weight: 500;
+        }
+      }
+
+      .ant-progress {
+        .ant-progress-bg {
+          transition: all 0.3s ease;
+        }
+      }
+    }
+  }
+
+  // Browser & Device Stats Styling
+  .browser-device-stats {
+    .stat-section {
+      margin-bottom: 16px;
+
+      .stat-items {
+        margin-top: 12px;
+
+        .stat-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+          padding: 8px 12px;
+          background: #fafafa;
+          border-radius: 6px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: #f0f8ff;
+          }
+
+          .ant-tag {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+          }
+
+          span {
+            font-weight: 600;
+            color: #262626;
+          }
+        }
+      }
+    }
+  }
+
+  // Analytics Actions Styling
+  .analytics-summary {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+    text-align: center;
+  }
+}
+
+// Divider styling for visitor section
+.ant-divider {
+  &.ant-divider-with-text-left {
+    .ant-divider-inner-text {
+      font-weight: 600;
+      color: #262626;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+}
+
+// Responsive Design for Visitor Analytics
+@media (max-width: 768px) {
+  .visitor-details-section {
+    .ant-col {
+      margin-bottom: 16px;
+    }
+
+    .page-list .page-item .page-info .page-path {
+      max-width: 150px;
+    }
+  }
+}
+
+// Animation for visitor cards
+.visitor-card {
+  animation: fadeInUp 0.6s ease-out;
+  animation-delay: 0.3s;
+  animation-fill-mode: both;
+}
