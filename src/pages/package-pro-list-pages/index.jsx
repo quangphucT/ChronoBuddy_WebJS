@@ -10,7 +10,7 @@ import HeroSection from "../../components/atoms/carouselsub_content";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveDataToDB } from "../../apis/saveDataToDBApi";
 import { removeInformation } from "../../redux/feature/userSlice";
-import qrPaymentImage from "../../assets/images/qr_payment.jpg";
+import qrPaymentImage from "../../assets/images/qr_dang_code.jpg";
 
 const { Title, Text } = Typography;
 
