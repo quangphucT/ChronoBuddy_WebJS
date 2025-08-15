@@ -25,6 +25,7 @@ import MembersInWorkSpace from "./pages/member-in-workSpace";
 import TransactionHistory from "./pages/transaction-history";
 import OwnDashboard from "./pages/user/layout_dashboardOwn/user-dashboard";
 import ChatBox from "./pages/chatboxAI/chatbotform";
+import FirebaseTest from "./pages/FirebaseTest";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -126,6 +127,10 @@ const App = () => {
     {
       path: "/own-dashboard",
       element: <OwnDashboard/>
+    },
+    {
+      path: "/firebase-test",
+      element: <FirebaseTest />
     }
 
   ]);

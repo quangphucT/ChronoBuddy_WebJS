@@ -5,7 +5,7 @@ import { getPaymentYear } from '../../../../apis/getPaymentYearApi';
 import { getPaymentMonth } from '../../../../apis/getPaymentMonthApi';
 import { getRevenueEachPackageYear } from '../../../../apis/getRevenueEachPackageYearApi';
 import { getRevenueEachPackageMonth } from '../../../../apis/getRevenueEachPackageMonthApi';
-import { getVisitorAnalytics, exportVisitorData, clearVisitorData } from '../../../../utils/visitorAnalytics';
+import { getVisitorAnalytics, exportAnalyticsData } from '../../../../service/visitorAnalytics';
 import usePageTracker from '../../../../hooks/usePageTracker';
 import { 
   Button, 
@@ -78,28 +78,34 @@ const StatisticsManagement = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   // Refresh visitor analytics
-  const refreshVisitorAnalytics = () => {
+  const refreshVisitorAnalytics = async () => {
     setRefreshing(true);
-    setTimeout(() => {
-      const analytics = getVisitorAnalytics();
+    try {
+      const analytics = await getVisitorAnalytics();
       setVisitorAnalytics(analytics);
+      toast.success('🔥 Visitor analytics refreshed from Firebase!');
+    } catch (error) {
+      toast.error('⚠️ Failed to refresh analytics');
+      console.error('Error refreshing analytics:', error);
+    } finally {
       setRefreshing(false);
-    }, 500);
+    }
   };
 
   // Export visitor data
-  const handleExportVisitorData = () => {
-    exportVisitorData();
-    toast.success('Visitor data exported successfully!');
+  const handleExportVisitorData = async () => {
+    try {
+      await exportAnalyticsData();
+      toast.success('📊 Visitor data exported successfully!');
+    } catch (error) {
+      toast.error('⚠️ Failed to export visitor data');
+      console.error('Error exporting data:', error);
+    }
   };
 
-  // Clear visitor data
+  // Clear visitor data (Firebase version - note: this would require additional Firebase functions)
   const handleClearVisitorData = () => {
-    if (window.confirm('Are you sure you want to clear all visitor data? This action cannot be undone.')) {
-      clearVisitorData();
-      refreshVisitorAnalytics();
-      toast.success('Visitor data cleared successfully!');
-    }
+    toast.warning('⚠️ Clear data function not implemented for Firebase version. Please use Firebase Console to manage data.');
   };
 
   // Năm - Tổng thanh toán
