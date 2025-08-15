@@ -342,42 +342,7 @@ const StatisticsManagement = () => {
       {/* Visitor Analytics Details */}
       <Row gutter={[24, 24]} className="visitor-details-section" style={{ marginTop: 24 }}>
         {/* Most Visited Pages */}
-        <Col xs={24} lg={8}>
-          <Card 
-            title={
-              <Space>
-                {/* <TrendingUpOutlined /> */}
-                <span>Top Pages</span>
-              </Space>
-            }
-            className="visitor-card"
-            extra={
-              <Button 
-                icon={<ReloadOutlined />} 
-                onClick={refreshVisitorAnalytics}
-                loading={refreshing}
-                type="text"
-              />
-            }
-          >
-            <div className="page-list">
-              {visitorAnalytics?.pageViewsBreakdown?.slice(0, 8).map((page) => (
-                <div key={page.path} className="page-item">
-                  <div className="page-info">
-                    <Text strong className="page-path">{page.path || '/'}</Text>
-                    <Text type="secondary" className="page-count">{page.count} views</Text>
-                  </div>
-                  <Progress 
-                    percent={Math.round((page.count / (visitorAnalytics?.pageViewsBreakdown?.[0]?.count || 1)) * 100)} 
-                    size="small" 
-                    showInfo={false}
-                    strokeColor="#1890ff"
-                  />
-                </div>
-              )) || []}
-            </div>
-          </Card>
-        </Col>
+      
 
         {/* Browser & Device Stats */}
         <Col xs={24} lg={8}>
