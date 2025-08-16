@@ -5,6 +5,7 @@ import { getPaymentYear } from '../../../../apis/getPaymentYearApi';
 import { getPaymentMonth } from '../../../../apis/getPaymentMonthApi';
 import { getRevenueEachPackageYear } from '../../../../apis/getRevenueEachPackageYearApi';
 import { getRevenueEachPackageMonth } from '../../../../apis/getRevenueEachPackageMonthApi';
+import { getTransactionStats } from '../../../../apis/transaction/transactionApi';
 import { getVisitorAnalytics, exportAnalyticsData } from '../../../../service/visitorAnalytics';
 import usePageTracker from '../../../../hooks/usePageTracker';
 import { 
@@ -37,6 +38,10 @@ import {
   MobileOutlined,
   DesktopOutlined,
   DownloadOutlined,
+  CreditCardOutlined,
+  ShoppingCartOutlined,
+  BankOutlined,
+  CheckCircleOutlined,
   DeleteOutlined
 } from '@ant-design/icons';
 
@@ -77,6 +82,18 @@ const StatisticsManagement = () => {
   const [visitorAnalytics, setVisitorAnalytics] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
+  // Transaction analytics states
+  const [transactionData, setTransactionData] = useState([]);
+  const [transactionStats, setTransactionStats] = useState({
+    totalRevenue: 0,
+    totalTransactions: 0,
+    avgTransactionValue: 0,
+    paymentMethods: {},
+    subscriptionPlans: {},
+    recentTransactions: []
+  });
+  const [loadingTransactions, setLoadingTransactions] = useState(false);
+
   // Refresh visitor analytics
   const refreshVisitorAnalytics = async () => {
     setRefreshing(true);
@@ -106,6 +123,54 @@ const StatisticsManagement = () => {
   // Clear visitor data (Firebase version - note: this would require additional Firebase functions)
   const handleClearVisitorData = () => {
     toast.warning('⚠️ Clear data function not implemented for Firebase version. Please use Firebase Console to manage data.');
+  };
+
+  // Fetch transaction analytics
+  const fetchTransactionAnalytics = async () => {
+    setLoadingTransactions(true);
+    try {
+      const response = await getTransactionStats();
+      const transactions = response?.data || [];
+      setTransactionData(transactions);
+
+      // Calculate statistics
+      const totalRevenue = transactions.reduce((sum, transaction) => sum + transaction.totalMoney, 0);
+      const totalTransactions = transactions.length;
+      const avgTransactionValue = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
+
+      // Payment methods breakdown
+      const paymentMethods = transactions.reduce((acc, transaction) => {
+        acc[transaction.paymentMethod] = (acc[transaction.paymentMethod] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Subscription plans breakdown
+      const subscriptionPlans = transactions.reduce((acc, transaction) => {
+        acc[transaction.subscriptionPlanName] = (acc[transaction.subscriptionPlanName] || 0) + transaction.totalMoney;
+        return acc;
+      }, {});
+
+      // Recent transactions (last 5)
+      const recentTransactions = transactions
+        .sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt))
+        .slice(0, 5);
+
+      setTransactionStats({
+        totalRevenue,
+        totalTransactions,
+        avgTransactionValue,
+        paymentMethods,
+        subscriptionPlans,
+        recentTransactions
+      });
+
+      toast.success('💳 Transaction analytics loaded successfully!');
+    } catch (error) {
+      toast.error('⚠️ Failed to load transaction analytics');
+      console.error('Error fetching transaction analytics:', error);
+    } finally {
+      setLoadingTransactions(false);
+    }
   };
 
   // Năm - Tổng thanh toán
@@ -182,6 +247,7 @@ const StatisticsManagement = () => {
 
   useEffect(() => {
     refreshVisitorAnalytics();
+    fetchTransactionAnalytics();
   }, []);
 
   return (
@@ -269,7 +335,180 @@ const StatisticsManagement = () => {
           </Card>
         </Col>
       </Row>
+         {/* Transaction Analytics Section */}
+      <Row gutter={[24, 24]} className="transaction-section" style={{ marginTop: 24 }}>
+        <Col span={24}>
+          <Card 
+            title={
+              <Space>
+                <CreditCardOutlined />
+                <span>Transaction Analytics</span>
+              </Space>
+            }
+            className="transaction-header-card"
+            extra={
+              <Button 
+                icon={<ReloadOutlined />} 
+                onClick={fetchTransactionAnalytics}
+                loading={loadingTransactions}
+                type="text"
+              />
+            }
+          >
+            <Row gutter={[16, 16]}>
+              {/* Transaction Overview Stats */}
+              <Col xs={24} sm={6}>
+                <div className="transaction-stat-card">
+                  <Statistic
+                    title="Total Revenue"
+                    value={transactionStats.totalRevenue}
+                    precision={0}
+                    prefix={<DollarOutlined />}
+                    suffix="VND"
+                    valueStyle={{ color: '#3f8600', fontSize: '24px' }}
+                  />
+                </div>
+              </Col>
+              <Col xs={24} sm={6}>
+                <div className="transaction-stat-card">
+                  <Statistic
+                    title="Total Transactions"
+                    value={transactionStats.totalTransactions}
+                    prefix={<ShoppingCartOutlined />}
+                    valueStyle={{ color: '#1890ff', fontSize: '24px' }}
+                  />
+                </div>
+              </Col>
+              <Col xs={24} sm={6}>
+                <div className="transaction-stat-card">
+                  <Statistic
+                    title="Average Transaction"
+                    value={transactionStats.avgTransactionValue}
+                    precision={0}
+                    prefix={<BankOutlined />}
+                    suffix="VND"
+                    valueStyle={{ color: '#722ed1', fontSize: '24px' }}
+                  />
+                </div>
+              </Col>
+              <Col xs={24} sm={6}>
+                <div className="transaction-stat-card">
+                  <Statistic
+                    title="Success Rate"
+                    value={100}
+                    precision={1}
+                    prefix={<CheckCircleOutlined />}
+                    suffix="%"
+                    valueStyle={{ color: '#52c41a', fontSize: '24px' }}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
 
+      {/* Transaction Details */}
+      <Row gutter={[24, 24]} className="transaction-details-section" style={{ marginTop: 24 }}>
+        {/* Payment Methods Breakdown */}
+        <Col xs={24} lg={8}>
+          <Card 
+            title={
+              <Space>
+                <CreditCardOutlined />
+                <span>Payment Methods</span>
+              </Space>
+            }
+            className="transaction-card"
+          >
+            <div className="payment-methods">
+              {Object.entries(transactionStats.paymentMethods).map(([method, count]) => (
+                <div key={method} className="payment-method-item">
+                  <div className="payment-method-info">
+                    <Tag color={method === 'VNPAY' ? 'blue' : method === 'MOMO' ? 'pink' : 'green'}>
+                      {method}
+                    </Tag>
+                    <Text strong>{count} transactions</Text>
+                  </div>
+                  <Progress 
+                    percent={Math.round((count / transactionStats.totalTransactions) * 100)} 
+                    size="small" 
+                    showInfo={false}
+                    strokeColor={method === 'VNPAY' ? '#1890ff' : method === 'MOMO' ? '#eb2f96' : '#52c41a'}
+                  />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </Col>
+
+        {/* Subscription Plans Revenue */}
+        <Col xs={24} lg={8}>
+          <Card 
+            title={
+              <Space>
+                <ShoppingCartOutlined />
+                <span>Subscription Plans</span>
+              </Space>
+            }
+            className="transaction-card"
+          >
+            <div className="subscription-plans">
+              {Object.entries(transactionStats.subscriptionPlans).map(([plan, revenue]) => (
+                <div key={plan} className="subscription-plan-item">
+                  <div className="plan-info">
+                    <Text strong>{plan}</Text>
+                    <Text type="secondary">{revenue.toLocaleString()} VND</Text>
+                  </div>
+                  <Progress 
+                    percent={Math.round((revenue / transactionStats.totalRevenue) * 100)} 
+                    size="small" 
+                    showInfo={false}
+                    strokeColor="#722ed1"
+                  />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </Col>
+
+        {/* Recent Transactions */}
+        <Col xs={24} lg={8}>
+          <Card 
+            title={
+              <Space>
+                <BankOutlined />
+                <span>Recent Transactions</span>
+              </Space>
+            }
+            className="transaction-card"
+          >
+            <div className="recent-transactions">
+              {transactionStats.recentTransactions.map((transaction) => (
+                <div key={transaction.paymentId} className="transaction-item">
+                  <div className="transaction-info">
+                    <div className="transaction-header">
+                      <Text strong>{transaction.username}</Text>
+                      <Tag color="green">{transaction.paymentStatus}</Tag>
+                    </div>
+                    <div className="transaction-details">
+                      <Text type="secondary" style={{ fontSize: '12px' }}>
+                        {transaction.subscriptionPlanName} • {transaction.paymentMethod}
+                      </Text>
+                      <Text strong style={{ color: '#3f8600' }}>
+                        {transaction.totalMoney.toLocaleString()} VND
+                      </Text>
+                    </div>
+                    <Text type="secondary" style={{ fontSize: '11px' }}>
+                      {new Date(transaction.paidAt).toLocaleDateString('vi-VN')}
+                    </Text>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </Col>
+      </Row>
       {/* Visitor Analytics Section */}
       <Divider orientation="left" style={{ fontSize: '18px', fontWeight: 'bold', margin: '40px 0 20px' }}>
         <EyeOutlined style={{ marginRight: 8 }} />
@@ -436,6 +675,8 @@ const StatisticsManagement = () => {
           </Card>
         </Col>
       </Row>
+
+   
 
       {/* Control Panels */}
       <Row gutter={[24, 24]} className="control-section">
